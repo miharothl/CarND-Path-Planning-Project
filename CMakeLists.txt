@@ -7,8 +7,25 @@ add_definitions(-std=c++11)
 set(CXX_FLAGS "-Wall")
 set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 
-set(sources src/main.cpp src/spline.h)
-
+set(sources
+        src/main.cpp
+        src/lib/spline.h
+        src/vehicle.h
+        src/vehicle.cpp
+        src/cost.cpp
+        src/cost.h
+        src/state/states/state.cpp
+        src/state/states/state.h
+        src/state/machine.cpp
+        src/state/machine.h
+        src/state/states/cruising_state.cpp
+        src/state/states/cruising_state.h
+        src/state/states/chainging_lane_to_left_state.cpp
+        src/state/states/chainging_lane_to_left_state.h
+        src/state/states/chainging_lane_to_right_state.cpp
+        src/state/states/chainging_lane_to_right_state.h
+        src/state/states/ready_state.cpp
+        src/state/states/ready_state.h)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
@@ -20,6 +37,8 @@ link_directories(/usr/local/Cellar/libuv/1.11.0/lib)
 
 endif(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 
+add_subdirectory(src)
+add_subdirectory(test)
 
 add_executable(path_planning ${sources})
 

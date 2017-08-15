@@ -5,10 +5,10 @@
 #include <iostream>
 #include <thread>
 #include <vector>
-#include "Eigen-3.3/Eigen/Core"
-#include "Eigen-3.3/Eigen/QR"
-#include "json.hpp"
-#include "spline.h"
+#include "lib/Eigen-3.3/Eigen/Core"
+#include "lib/Eigen-3.3/Eigen/QR"
+#include "lib/json.hpp"
+#include "lib/spline.h"
 
 using namespace std;
 
@@ -167,6 +167,17 @@ vector<double> getXY(double s, double d, vector<double> maps_s, vector<double> m
 //}
 
 int main() {
+
+
+
+//
+//  void(Machine:: *ptrs[])() =
+//          {
+//                  Machine::off, Machine::on
+//          };
+
+
+
   uWS::Hub h;
 
   // Load up map values for waypoint's x,y,s and d normalized normal vectors
