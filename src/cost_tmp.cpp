@@ -2,20 +2,20 @@
 // Created by Miha Röthl on 02/08/2017.
 //
 
-#include "cost.h"
-#include "vehicle.h"
+#include "cost_tmp.h"
+#include "vehicle_tmp.h"
 
-Cost::Cost()
+Cost_tmp::Cost_tmp()
 {
 
 }
 
-Cost::~Cost()
+Cost_tmp::~Cost_tmp()
 {
 
 }
 
-double Cost::buffer_cost(Vehicle* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions, TrajectoryData data)
+double Cost_tmp::buffer_cost(Vehicle_tmp* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions, TrajectoryData data)
 {
   auto closest = data.closest_approach;
 
@@ -34,7 +34,7 @@ double Cost::buffer_cost(Vehicle* vehicle, vector<Snapshot> trajectory, map<int,
   return multiplier * DANGER;
 }
 
-double Cost::collision_cost(Vehicle *vehicle, std::vector<Snapshot> trajectory,
+double Cost_tmp::collision_cost(Vehicle_tmp *vehicle, std::vector<Snapshot> trajectory,
                             std::map<int, std::vector<std::vector<int>>> predictions, TrajectoryData data) {
 
 
@@ -52,7 +52,7 @@ double Cost::collision_cost(Vehicle *vehicle, std::vector<Snapshot> trajectory,
   return return_val;
 }
 
-double Cost::change_lane_cost(Vehicle *vehicle, std::vector<Snapshot> trajectory,
+double Cost_tmp::change_lane_cost(Vehicle_tmp *vehicle, std::vector<Snapshot> trajectory,
                               std::map<int, std::vector<std::vector<int>>> predictions, TrajectoryData data) {
 
   auto proposed_lanes = data.end_lanes_from_goal;
@@ -70,7 +70,7 @@ double Cost::change_lane_cost(Vehicle *vehicle, std::vector<Snapshot> trajectory
   return cost;
 }
 
-double Cost::distance_from_goal_lane_cost(Vehicle *vehicle, std::vector<Snapshot> trajectory,
+double Cost_tmp::distance_from_goal_lane_cost(Vehicle_tmp *vehicle, std::vector<Snapshot> trajectory,
                                           std::map<int, std::vector<std::vector<int>>> predictions,
                                           TrajectoryData data) {
 
@@ -86,7 +86,7 @@ double Cost::distance_from_goal_lane_cost(Vehicle *vehicle, std::vector<Snapshot
   return cost;
 }
 
-double Cost::inefficiency_cost(Vehicle* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions, TrajectoryData data)
+double Cost_tmp::inefficiency_cost(Vehicle_tmp* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions, TrajectoryData data)
 {
   auto speed = data.avg_speed;
   auto target_speed = vehicle->target_speed;
@@ -101,7 +101,7 @@ double Cost::inefficiency_cost(Vehicle* vehicle, vector<Snapshot> trajectory, ma
 
 }
 
-double Cost::calculate_cost(Vehicle* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions) {
+double Cost_tmp::calculate_cost(Vehicle_tmp* vehicle, vector<Snapshot> trajectory, map<int, vector<vector<int>>> predictions) {
 
   auto trajectory_data = this->get_helper_data(vehicle, trajectory, predictions);
 
@@ -128,7 +128,7 @@ double Cost::calculate_cost(Vehicle* vehicle, vector<Snapshot> trajectory, map<i
   return cost;
 }
 
-TrajectoryData Cost::get_helper_data(Vehicle* vehicle, std::vector<Snapshot> trajectory,
+TrajectoryData Cost_tmp::get_helper_data(Vehicle_tmp* vehicle, std::vector<Snapshot> trajectory,
                                      std::map<int, std::vector<std::vector<int>>> predictions)
 {
   auto t = trajectory;
@@ -208,7 +208,7 @@ TrajectoryData Cost::get_helper_data(Vehicle* vehicle, std::vector<Snapshot> tra
   return trajectory_data;
 }
 
-bool Cost::check_collision(Snapshot snapshot, int s_previous, int s_now)
+bool Cost_tmp::check_collision(Snapshot snapshot, int s_previous, int s_now)
 {
   auto s = snapshot.s;
   auto v = snapshot.v;
@@ -242,7 +242,7 @@ bool Cost::check_collision(Snapshot snapshot, int s_previous, int s_now)
   throw std::runtime_error("check collision failed!");
 }
 
-std::map<int, vector<vector<int>>> Cost::filter_predictions_by_lane(map<int, vector<vector<int>>> predictions, int lane)
+std::map<int, vector<vector<int>>> Cost_tmp::filter_predictions_by_lane(map<int, vector<vector<int>>> predictions, int lane)
 {
   // TODO:: use copy_if to filter std::map
   map <int, vector<vector<int>>> filtered;

@@ -18,7 +18,9 @@ public:
 
   virtual void ChangeLaneToRight(Machine *machine);
 
-  virtual void ready(Machine *m);
+  virtual void Ready(Machine *m);
+
+  virtual int GetProposedLane(int current_lane);
 };
 
 class TransitionNotAllowedException: public std::exception

@@ -3,7 +3,7 @@ project(basic_test)
 
 
 set(sources
-        state/machine_tests.cpp
+
         ../src/state/states/state.cpp
         ../src/state/states/state.h
         ../src/state/machine.cpp
@@ -17,7 +17,19 @@ set(sources
         ../src/state/states/chainging_lane_to_right_state.h
         ../src/state/states/chainging_lane_to_right_state.cpp
 
-        )
+        ../src/sensor/measurement.h
+        ../src/sensor/measurement.cpp
+
+        ../src/cost/cost.h
+        ../src/cost/cost.cpp
+
+        ../src/cost/vehicle.h
+        ../src/cost/vehicle.cpp
+
+        cost/cost_tests.cpp
+        state/machine_tests.cpp
+
+        vehicle_tests.cpp vehicle_tests.h)
 
 ################################
 # GTest

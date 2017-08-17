@@ -28,7 +28,7 @@
 			buildPhases = (
 				40C44ADB0E3798F4008FCC51 /* Generate Version.h */,
 			);
-			comments = "The generation of Version.h must be performed in its own target. Since the Info.plist is preprocessed before any of the other build phases in gtest, the Version.h file would not be ready if included as a build phase of that target.";
+			comments = "The generation of Version.h must be performed in its own target. Since the Info.plist is preprocessed before any of the other build phases in gtest, the Version.h file would not be Ready if included as a build phase of that target.";
 			dependencies = (
 			);
 			name = "Version Info";

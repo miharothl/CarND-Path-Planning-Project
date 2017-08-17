@@ -15,6 +15,8 @@ public:
   ~ChaingingLaneToLeftState();
 
   void Cruise(Machine *m);
+
+  int GetProposedLane(int current_lane);
 };
 
 #endif //PATH_PLANNING_CHAINGING_LANE_LEFT_H

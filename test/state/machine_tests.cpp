@@ -24,7 +24,6 @@ TEST(state_machine, Should_BeInReadyState_When_MachineISInitialised)
   EXPECT_FALSE(typeid(*current_state) == typeid(CruisingState));
 }
 
-
 TEST(state_machine, Should_ChangeState_When_ChangeStateIsAllowed)
 {
   Machine fsm;
@@ -44,12 +43,10 @@ TEST(state_machine, Should_ChangeState_When_ChangeStateIsAllowed)
   EXPECT_TRUE(typeid(*current_state) == typeid(CruisingState));
 
   fsm.ChangeLaneToRight();
-//  fsm.ChangeLaneToRight();
-//  current_state = fsm.GetCurrentState();
-//  EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToRightState));
-
-
+  current_state = fsm.GetCurrentState();
+  EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToRightState));
 }
+
 
 TEST(state_machine, Should_ThrowException_When_StateTransitionIsNotAllowed)
 {
@@ -67,3 +64,32 @@ TEST(state_machine, Should_ThrowException_When_StateTransitionIsNotAllowed)
          , TransitionNotAllowedException);
 }
 
+
+TEST(state_machine, Should_ProposeLeftLane_When_InChangingLaneToLeftState)
+{
+  Machine fsm;
+  fsm.Cruise();
+  fsm.ChangeLaneToLeft();
+  int current_lane = 2;
+  int proposed_lane = fsm.GetProposedLane(current_lane);
+  EXPECT_EQ(proposed_lane, current_lane-1);
+}
+
+TEST(state_machine, Should_ProposeRightLane_When_InChangingLaneToRightState)
+{
+  Machine fsm;
+  fsm.Cruise();
+  fsm.ChangeLaneToRight();
+  int current_lane = 2;
+  int proposed_lane = fsm.GetProposedLane(current_lane);
+  EXPECT_EQ(proposed_lane, current_lane+1);
+}
+
+TEST(state_machine, Should_ProposeSameLane_When_InCruisingState)
+{
+  Machine fsm;
+  fsm.Cruise();
+  int current_lane = 2;
+  int proposed_lane = fsm.GetProposedLane(current_lane);
+  EXPECT_EQ(proposed_lane, current_lane);
+}

@@ -196,7 +196,7 @@ If you still need to use the legacy build scripts, here's how:
 
 The msvc\ folder contains two solutions with Visual C++ projects.
 Open the `gtest.sln` or `gtest-md.sln` file using Visual Studio, and you
-are ready to build Google Test the same way you build any Visual
+are Ready to build Google Test the same way you build any Visual
 Studio project.  Files that have names ending with -md use DLL
 versions of Microsoft runtime libraries (the /MD or the /MDd compiler
 option).  Files without that suffix use static versions of the runtime

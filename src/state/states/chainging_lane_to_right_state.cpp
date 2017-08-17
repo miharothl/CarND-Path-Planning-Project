@@ -23,3 +23,7 @@ void ChaingingLaneToRightState::Cruise(Machine *m) {
   m->SetCurrentState(new CruisingState());
   delete(this);
 }
+
+int ChaingingLaneToRightState::GetProposedLane(int current_lane) {
+  return current_lane + 1;
+}

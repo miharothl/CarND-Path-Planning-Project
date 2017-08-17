@@ -2062,7 +2062,7 @@ the call stack when an exception is thrown.  To achieve that, set the
 ### Letting Another Testing Framework Drive ###
 
 If you work on a project that has already been using another testing
-framework and is not ready to completely switch to Google Test yet,
+framework and is not Ready to completely switch to Google Test yet,
 you can get much of Google Test's benefit by using its assertions in
 your existing tests.  Just change your `main()` function to look
 like:
@@ -2171,12 +2171,12 @@ python fuse_gtest_files.py OUTPUT_DIR
 and you should see an `OUTPUT_DIR` directory being created with files
 `gtest/gtest.h` and `gtest/gtest-all.cc` in it.  These files contain
 everything you need to use Google Test.  Just copy them to anywhere
-you want and you are ready to write tests.  You can use the
+you want and you are Ready to write tests.  You can use the
 [scripts/test/Makefile](../scripts/test/Makefile)
 file as an example on how to compile your tests against them.
 
 # Where to Go from Here #
 
 Congratulations! You've now learned more advanced Google Test tools and are
-ready to tackle more complex testing tasks. If you want to dive even deeper, you
+Ready to tackle more complex testing tasks. If you want to dive even deeper, you
 can read the [Frequently-Asked Questions](FAQ.md).

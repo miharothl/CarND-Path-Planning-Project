@@ -205,7 +205,7 @@ for(...)
 }
 SparseMatrixType mat(rows,cols);
 mat.setFromTriplets(tripletList.begin(), tripletList.end());
-// mat is ready to go!
+// mat is Ready to go!
 \endcode
 The \c std::vector of triplets might contain the elements in arbitrary order, and might even contain duplicated elements that will be summed up by setFromTriplets().
 See the SparseMatrix::setFromTriplets() function and class Triplet for more details.

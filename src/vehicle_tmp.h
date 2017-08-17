@@ -1,7 +1,7 @@
 #ifndef CPP_VEHICLE_H
 #define CPP_VEHICLE_H
 
-class Cost;
+class Cost_tmp;
 struct Snapshot;
 
 #include <iostream>
@@ -26,7 +26,7 @@ struct Snapshot {
 
 using namespace std;
 
-class Vehicle {
+class Vehicle_tmp {
 public:
 
   struct collider{
@@ -58,19 +58,19 @@ public:
 
   int goal_s;
 
-  Cost* cost;
+  Cost_tmp* cost;
 
   string state;
 
   /**
   * Constructor
   */
-  Vehicle(int lane, int s, int v, int a);
+  Vehicle_tmp(int lane, int s, int v, int a);
 
   /**
   * Destructor
   */
-  virtual ~Vehicle();
+  virtual ~Vehicle_tmp();
 
   void update_state(map<int, vector <vector<int> > > predictions);
 
@@ -93,9 +93,9 @@ public:
 
   vector<int> state_at(int t);
 
-  bool collides_with(Vehicle other, int at_time);
+  bool collides_with(Vehicle_tmp other, int at_time);
 
-  collider will_collide_with(Vehicle other, int timesteps);
+  collider will_collide_with(Vehicle_tmp other, int timesteps);
 
   void realize_state(map<int, vector < vector<int> > > predictions);
 

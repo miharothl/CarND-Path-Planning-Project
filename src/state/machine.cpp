@@ -24,7 +24,7 @@ State* Machine::GetCurrentState() {
 }
 
 void Machine::GetReady() {
-  current_->ready(this);
+  current_->Ready(this);
 }
 
 void Machine::Cruise(){
@@ -39,3 +39,6 @@ void Machine::ChangeLaneToRight() {
   this->current_->ChangeLaneToRight(this);
 }
 
+int Machine::GetProposedLane(int current_lane) {
+  return this->current_->GetProposedLane(current_lane);
+}

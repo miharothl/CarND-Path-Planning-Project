@@ -23,6 +23,8 @@ public:
   void ChangeLaneToLeft();
 
   void ChangeLaneToRight();
+
+  int GetProposedLane(int current_lane);
 };
 
 #endif //PATH_PLANNING_MACHINE_H

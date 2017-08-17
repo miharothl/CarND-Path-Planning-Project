@@ -56,7 +56,6 @@ int ClosestWaypoint(double x, double y, vector<double> maps_x, vector<double> ma
       closestLen = dist;
       closestWaypoint = i;
     }
-
   }
 
   return closestWaypoint;
@@ -247,8 +246,6 @@ int main() {
           double car_yaw = j[1]["yaw"];
           double car_speed = j[1]["speed"];
 
-
-
           // Previous path data given to the Planner
           auto previous_path_x = j[1]["previous_path_x"];
           auto previous_path_y = j[1]["previous_path_y"];
@@ -273,9 +270,40 @@ int main() {
 
           bool too_close = false;
 
+
+          cout << "---------------------------------\n";
+          cout << " car EGO ";
+          cout << "; x: " << car_x;
+          cout << "; y: " << car_y;
+          cout << "; vx: " << car_speed / 2.24 * cos(deg2rad(car_yaw));
+          cout << "; vy: " << car_speed / 2.24 * sin(deg2rad(car_yaw));
+          cout << "; s: " << car_s;
+          cout << "; d: " << car_d;
+          cout << "; speed: " << car_speed;
+          cout << "; yaw: " << car_yaw;
+          cout << endl;
+
           for (int i = 0; i<sensor_fusion.size(); i++)
           {
             // car is in my lane
+
+//            ["sensor_fusion"] A 2d vector of cars and then that car's
+// [car's unique ID,
+// car's x position in map coordinates,
+// car's y position in map coordinates,
+// car's x velocity in m/s,
+// car's y velocity in m/s,
+// car's s position in frenet coordinates,
+// car's d position in frenet coordinates.
+
+            cout << " car id: " << sensor_fusion[i][0];
+            cout << "; x: " << sensor_fusion[i][1];
+            cout << "; y: " << sensor_fusion[i][2];
+            cout << "; vx: " << sensor_fusion[i][3];
+            cout << "; vy: " << sensor_fusion[i][4];
+            cout << "; s: " << sensor_fusion[i][5];
+            cout << "; d: " << sensor_fusion[i][6];
+            cout << endl;
 
             float d = sensor_fusion[i][6];
             if (d < (2+4*lane+2) && d > 2+4*lane-2) {
@@ -296,7 +324,6 @@ int main() {
                   lane = 0;
                 }
               }
-
 
             }
           }
