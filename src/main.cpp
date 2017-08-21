@@ -9,7 +9,7 @@
 #include "lib/Eigen-3.3/Eigen/QR"
 #include "lib/json.hpp"
 #include "lib/spline.h"
-#include "cost/vehicle.h"
+#include "vehicle.h"
 #include "controller.h"
 
 using namespace std;
@@ -214,18 +214,18 @@ int main() {
     map_waypoints_dy.push_back(d_y);
   }
 
-  Controller controller(0);
+  Controller controller(1);
   Machine machine(&controller);
   machine.Cruise();
   Vehicle vehicle(&machine);
 
   // start in lane 1
-//  int lane = 1;
+  int lane = 1;
 
   // have a reference velocity to target
   double ref_vel = 0.; // mph
 
-  h.onMessage([&ref_vel, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &vehicle, &controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&ref_vel, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &vehicle, &lane, &controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -317,7 +317,7 @@ int main() {
 //            cout << "; d: " << sensor_fusion[i][6];
 //            cout << endl;
 
-            int lane = controller.lane_;
+            lane = controller.GetTargetLane();
 
             float d = sensor_fusion[i][6];
             if (d < (2+4*lane+2) && d > 2+4*lane-2) {
@@ -345,9 +345,13 @@ int main() {
           if (too_close) {
             ref_vel -= .224;
           }
-          else if (ref_vel < 49.5)
+          else if (ref_vel < controller.GetTargetSpeed())
           {
             ref_vel += .224;
+          }
+          else if (ref_vel > controller.GetTargetSpeed())
+          {
+            ref_vel -= .224;
           }
 
           // SENSOR FUSION END
@@ -390,7 +394,7 @@ int main() {
             ptsy.push_back(ref_y);
           }
 
-          int lane = controller.lane_;
+          lane = controller.GetTargetLane();
           // In Frenet add evenly 30m spaced points ahead of the starting reference
           vector<double> next_wp0 = getXY(car_s+30, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
           vector<double> next_wp1 = getXY(car_s+60, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
@@ -437,7 +441,7 @@ int main() {
           // Fill up the rest of our path planner after filling it with previous points, here we will always output 50 points
           for (int i=1; i<=50-previous_path_x.size(); i++) {
 
-            double N = (target_dist/(.02*ref_vel/2.24));
+            double N = (target_dist/(.02*ref_vel));
             double x_point = x_add_on + (target_x) / N;
             double y_point = s(x_point);
 

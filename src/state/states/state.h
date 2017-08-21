@@ -18,10 +18,8 @@ protected:
 public:
   virtual void Cruise(Machine *machine, Controller *controller);
 
-  virtual void ChangeLaneToLeft(Machine *machine, Controller *controller);
   virtual void ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane);
 
-  virtual void ChangeLaneToRight(Machine *machine, Controller *controller);
   virtual void ChangeLaneToRight(Machine *machine, Controller *controller, int current_lane);
 
   virtual void Ready(Machine *m, Controller *controller);

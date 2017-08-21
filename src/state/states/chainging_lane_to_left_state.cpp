@@ -23,17 +23,17 @@ int ChaingingLaneToLeftState::GetProposedLane(int current_lane) {
   return current_lane - 1;
 }
 
-void ChaingingLaneToLeftState::ChangeLaneToLeft(Machine *m) {
-  State::ChangeLaneToLeft(m, m->controller_);
-}
-
-void ChaingingLaneToLeftState::Cruise(Machine *m) {
-  State::Cruise(m, m->controller_);
-}
-
-void ChaingingLaneToLeftState::ChangeLaneToRight(Machine *m) {
-  State::ChangeLaneToRight(m, m->controller_);
-}
-
-
+//void ChaingingLaneToLeftState::ChangeLaneToLeft(Machine *m) {
+//  State::ChangeLaneToLeft(m, m->controller_);
+//}
+//
+//void ChaingingLaneToLeftState::Cruise(Machine *m) {
+//  State::Cruise(m, m->controller_);
+//}
+//
+//void ChaingingLaneToLeftState::ChangeLaneToRight(Machine *m) {
+//  State::ChangeLaneToRight(m, m->controller_);
+//}
+//
+//
 

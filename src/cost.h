@@ -22,7 +22,9 @@ public:
 
 public:
   double CalculateCost(Vehicle *vehicle);
+
   double ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+
   double ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 };
 

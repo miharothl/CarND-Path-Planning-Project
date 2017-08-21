@@ -7,16 +7,16 @@
 
 #include "gtest/gtest.h"
 
-#include "../../src/sensor/measurement.h"
-#include "../../src/cost/vehicle.h"
-#include "../../src/state/states/state.h"
-#include "../../src/state/states/ready_state.h"
-#include "../../src/state/states/cruising_state.h"
-#include "../../src/state/states/chainging_lane_to_left_state.h"
-#include "../../src/state/states/chainging_lane_to_right_state.h"
-#include "../../src/cost/cost.h"
+#include "../src/measurement.h"
+#include "../src/vehicle.h"
+#include "../src/state/states/state.h"
+#include "../src/state/states/ready_state.h"
+#include "../src/state/states/cruising_state.h"
+#include "../src/state/states/chainging_lane_to_left_state.h"
+#include "../src/state/states/chainging_lane_to_right_state.h"
+#include "../src/cost.h"
 
-#include "../tools/data.h"
+#include "tools/data.h"
 
 using namespace std;
 
@@ -44,7 +44,7 @@ TEST(cost, Should_CostShouldBeHigher_When_ColisionDetected)
   EXPECT_TRUE(colision_cost > 367879);
 
 
-  machine.ChangeLaneToLeft();
+  machine.ChangeLaneToLeft(1);
   Vehicle vehicleLeft(&machine);
   colision_cost = cost.ColisionCost(&vehicleLeft, trafic_measurements);
   EXPECT_TRUE(colision_cost == 0.);
@@ -71,7 +71,7 @@ TEST(cost, Should_CostShouldBeHigher_When_ChaingingLanes)
   EXPECT_EQ(changeLaneCost, 0.);
 
   machine.Cruise();
-  machine.ChangeLaneToLeft();
+  machine.ChangeLaneToLeft(1);
   changeLaneCost = cost.ChangeLaneCost(&vehicle, trafic_measurements);
   EXPECT_EQ(changeLaneCost, cost.kComfort);
 }

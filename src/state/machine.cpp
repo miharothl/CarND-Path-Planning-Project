@@ -7,7 +7,7 @@
 
 #include "states/state.h"
 #include "states/ready_state.h"
-#include "../cost/cost.h"
+#include "../cost.h"
 #include "../controller.h"
 
 Machine::Machine() {
@@ -26,6 +26,7 @@ Machine::Machine(const Machine& source)
   if (source.current_)
   {
     this->current_ = new ReadyState(this->controller_);
+    this->controller_ = NULL;
   }
 }
 
@@ -46,16 +47,8 @@ void Machine::Cruise(){
   this->current_->Cruise(this, this->controller_);
 }
 
-void Machine::ChangeLaneToLeft() {
-  this->current_->ChangeLaneToLeft(this, this->controller_);
-}
-
 void Machine::ChangeLaneToLeft(int current_lane) {
   this->current_->ChangeLaneToLeft(this, this->controller_, current_lane);
-}
-
-void Machine::ChangeLaneToRight() {
-  this->current_->ChangeLaneToRight(this, this->controller_);
 }
 
 void Machine::ChangeLaneToRight(int current_lane) {

@@ -6,9 +6,9 @@
 
 #include <vector>
 #include <iostream>
-#include "../state/states/state.h"
+#include "state/states/state.h"
 
-#include "../sensor/measurement.h"
+#include "measurement.h"
 
 using namespace std;
 

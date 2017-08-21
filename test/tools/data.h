@@ -8,7 +8,7 @@
 
 #include <vector>
 
-#include "../../src/sensor/measurement.h"
+#include "../../src/measurement.h"
 
 class Data {
 public:

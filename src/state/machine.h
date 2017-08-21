@@ -6,7 +6,7 @@
 #define PATH_PLANNING_MACHINE_H
 
 #include <vector>
-#include "../sensor/measurement.h"
+#include "../measurement.h"
 
 class Vehicle;
 
@@ -31,11 +31,11 @@ public:
   
   void Cruise();
 
-  void ChangeLaneToLeft();
+//  void ChangeLaneToLeft();
 
   void ChangeLaneToLeft(int current_lane);
 
-  void ChangeLaneToRight();
+//  void ChangeLaneToRight();
 
   void ChangeLaneToRight(int current_lane);
 

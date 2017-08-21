@@ -14,12 +14,6 @@ public:
 
   ~ChaingingLaneToLeftState();
 
-  void ChangeLaneToLeft(Machine *m);
-
-  void Cruise(Machine *m);
-
-  void ChangeLaneToRight(Machine *m);
-
   int GetProposedLane(int current_lane);
 };
 

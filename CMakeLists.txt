@@ -10,10 +10,10 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 set(sources
         src/main.cpp
         src/lib/spline.h
-        src/vehicle_tmp.h
-        src/vehicle_tmp.cpp
-        src/cost_tmp.cpp
-        src/cost_tmp.h
+        src/tmp/vehicle_tmp.h
+        src/tmp/vehicle_tmp.cpp
+        src/tmp/cost_tmp.cpp
+        src/tmp/cost_tmp.h
         src/state/states/state.cpp
         src/state/states/state.h
         src/state/machine.cpp
@@ -25,8 +25,8 @@ set(sources
         src/state/states/chainging_lane_to_right_state.cpp
         src/state/states/chainging_lane_to_right_state.h
         src/state/states/ready_state.cpp
-        src/state/states/ready_state.h src/sensor/measurement.h src/sensor/measurement.cpp src/cost/cost.cpp src/cost/cost.h src/cost/vehicle.cpp src/cost/vehicle.h
-        src/cost/road.cpp src/cost/road.h src/controller.cpp src/controller.h)
+        src/state/states/ready_state.h src/measurement.h src/measurement.cpp src/cost.cpp src/cost.h src/vehicle.cpp src/vehicle.h
+        src/road.cpp src/road.h src/controller.cpp src/controller.h)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 

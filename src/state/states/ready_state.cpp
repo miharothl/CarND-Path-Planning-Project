@@ -17,15 +17,3 @@ ReadyState::ReadyState(Controller *controller) {
 ReadyState::~ReadyState() {
 }
 
-void ReadyState::ChangeLaneToLeft(Machine *m) {
-  State::ChangeLaneToLeft(m, m->controller_);
-}
-
-void ReadyState::Cruise(Machine *m) {
-  State::Cruise(m, m->controller_);
-}
-
-void ReadyState::ChangeLaneToRight(Machine *m) {
-  State::ChangeLaneToRight(m, m->controller_);
-};
-

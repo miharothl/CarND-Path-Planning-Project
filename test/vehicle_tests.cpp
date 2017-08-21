@@ -8,14 +8,14 @@
 
 #include "gtest/gtest.h"
 
-#include "../src/sensor/measurement.h"
-#include "../src/cost/vehicle.h"
+#include "../src/measurement.h"
+#include "../src/vehicle.h"
 #include "../src/state/states/state.h"
 #include "../src/state/states/ready_state.h"
 #include "../src/state/states/cruising_state.h"
 #include "../src/state/states/chainging_lane_to_left_state.h"
 #include "../src/state/states/chainging_lane_to_right_state.h"
-#include "../src/cost/cost.h"
+#include "../src/cost.h"
 #include "tools/data.h"
 
 using namespace std;
@@ -58,6 +58,8 @@ TEST(vehicle, Should_BeAbleToPlanPath_When_MeasurementIsGeven) {
 
   Data data;
 
+//  Controller controller(1);
+//  Machine machine(&controller);
   Machine machine;
   machine.Cruise();
 

@@ -13,13 +13,6 @@ public:
   ReadyState(Controller *controller);
 
   ~ReadyState();
-
-  void ChangeLaneToLeft(Machine *m);
-
-  void Cruise(Machine *m);
-
-  void ChangeLaneToRight(Machine *m);
 };
-
 
 #endif //PATH_PLANNING_READY_STATE_H

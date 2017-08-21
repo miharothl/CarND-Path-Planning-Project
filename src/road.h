@@ -11,6 +11,8 @@ public:
 
   bool IsLaneAllowed(int lane);
 
+  double GetPreferedSpeedForLane(int lane);
+
 };
 
 #endif //PATH_PLANNING_ROAD_H

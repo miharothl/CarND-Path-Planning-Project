@@ -7,9 +7,9 @@
 
 #include <vector>
 
-#include "../sensor/measurement.h"
-#include "../state/machine.h"
-#include "../cost/road.h"
+#include "measurement.h"
+#include "state/machine.h"
+#include "road.h"
 
 class Vehicle {
 

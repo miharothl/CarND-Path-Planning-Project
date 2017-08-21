@@ -9,7 +9,7 @@
 
 #include "road.h"
 
-#include "../state/machine.h"
+#include "state/machine.h"
 
 using namespace std;
 

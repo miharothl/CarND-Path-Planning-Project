@@ -9,7 +9,7 @@
 
 #include <vector>
 
-#include "../../cost/vehicle.h"
+#include "../../vehicle.h"
 
 class CruisingState: public State
 {
@@ -17,12 +17,6 @@ public:
   CruisingState(Controller *controller);
 
   ~CruisingState();
-
-  void ChangeLaneToLeft(Machine *m);
-
-  void Cruise(Machine *m);
-
-  void ChangeLaneToRight(Machine *m);
 };
 
 #endif //PATH_PLANNING_KEEP_LANE_STATE_H

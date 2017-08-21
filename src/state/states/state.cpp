@@ -6,7 +6,7 @@
 
 #include <iostream>
 
-#include "../../cost/cost.h"
+#include "../../cost.h"
 #include "ready_state.h"
 #include "chainging_lane_to_right_state.h"
 #include "chainging_lane_to_left_state.h"
@@ -20,35 +20,27 @@ void State::Cruise(Machine *machine, Controller *controller){
   delete(this);
 }
 
-void State::ChangeLaneToLeft(Machine *machine, Controller *controller)
-{
+void State::ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane) {
   machine->SetCurrentState(new ChaingingLaneToLeftState(controller));
 
-  delete(this);
-}
-
-void State::ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane) {
-  this->ChangeLaneToLeft(machine, controller);
-
   if (this->controller_ != NULL) {
-    this->controller_->lane_ = machine->GetCurrentState()->GetProposedLane(current_lane);
-    cout << "controller lane:    " << this->controller_->lane_;
+    this->controller_->SetTargetLaneAndSpeed(machine->GetCurrentState()->GetProposedLane(current_lane));
+    cout << "Controller_lane:   " << this->controller_->GetTargetLane() << endl;
   }
-}
 
-void State::ChangeLaneToRight(Machine *machine, Controller *controller)
-{
-  machine->SetCurrentState(new ChaingingLaneToRightState(controller));
   delete(this);
 }
+
 
 void State::ChangeLaneToRight(Machine *machine, Controller *controller, int current_lane) {
-  this->ChangeLaneToRight(machine, controller);
+  machine->SetCurrentState(new ChaingingLaneToRightState(controller));
 
   if (this->controller_ != NULL) {
-    this->controller_->lane_ = machine->GetCurrentState()->GetProposedLane(current_lane);
-    cout << "controller lane:    " << this->controller_->lane_;
+    this->controller_->SetTargetLaneAndSpeed(machine->GetCurrentState()->GetProposedLane(current_lane));
+    cout << "Controller_lane:   " << this->controller_->GetTargetLane() << endl;
   }
+
+  delete(this);
 }
 
 void State::Ready(Machine *machine, Controller *controller)
@@ -72,7 +64,7 @@ void State::GoToNextBestState(Vehicle* vehicle)
   try {
     Machine cost_machine = *(vehicle->machine_);
     cost_machine.Cruise();
-    cost_machine.ChangeLaneToLeft();
+    cost_machine.ChangeLaneToLeft(vehicle->GetLane());
     auto cost = this->CalculateCost(vehicle, &cost_machine);
 
     if (cost < min_cost) {
@@ -101,7 +93,7 @@ void State::GoToNextBestState(Vehicle* vehicle)
   try {
     Machine cost_machine = *(vehicle->machine_);
     cost_machine.Cruise();
-    cost_machine.ChangeLaneToRight();
+    cost_machine.ChangeLaneToRight(vehicle->GetLane());
     auto cost = this->CalculateCost(vehicle, &cost_machine);
 
     if (cost < min_cost) {
