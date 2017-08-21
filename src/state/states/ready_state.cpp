@@ -10,16 +10,22 @@
 
 using namespace std;
 
-ReadyState::ReadyState() {
-  cout << "   ReadyState-ctor  ";
+ReadyState::ReadyState(Controller *controller) {
+  this->controller_ = controller;
 };
 
 ReadyState::~ReadyState() {
-  cout << "   ReadyState-dtor\n";
-};
+}
+
+void ReadyState::ChangeLaneToLeft(Machine *m) {
+  State::ChangeLaneToLeft(m, m->controller_);
+}
 
 void ReadyState::Cruise(Machine *m) {
-  cout << "   going to Cruise state\n";
-  m->SetCurrentState(new CruisingState());
-  delete this;
+  State::Cruise(m, m->controller_);
 }
+
+void ReadyState::ChangeLaneToRight(Machine *m) {
+  State::ChangeLaneToRight(m, m->controller_);
+};
+

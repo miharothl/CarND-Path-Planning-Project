@@ -10,11 +10,15 @@
 class ReadyState: public State
 {
 public:
-  ReadyState();
+  ReadyState(Controller *controller);
 
   ~ReadyState();
 
+  void ChangeLaneToLeft(Machine *m);
+
   void Cruise(Machine *m);
+
+  void ChangeLaneToRight(Machine *m);
 };
 
 

@@ -21,8 +21,9 @@ public:
   const double kEfficiency = pow(10, 2);
 
 public:
-  double CalculateCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+  double CalculateCost(Vehicle *vehicle);
   double ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+  double ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 };
 
 

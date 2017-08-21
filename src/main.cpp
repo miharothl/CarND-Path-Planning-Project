@@ -9,9 +9,10 @@
 #include "lib/Eigen-3.3/Eigen/QR"
 #include "lib/json.hpp"
 #include "lib/spline.h"
+#include "cost/vehicle.h"
+#include "controller.h"
 
 using namespace std;
-
 
 // for convenience
 using json = nlohmann::json;
@@ -213,13 +214,18 @@ int main() {
     map_waypoints_dy.push_back(d_y);
   }
 
+  Controller controller(0);
+  Machine machine(&controller);
+  machine.Cruise();
+  Vehicle vehicle(&machine);
+
   // start in lane 1
-  int lane = 1;
+//  int lane = 1;
 
   // have a reference velocity to target
   double ref_vel = 0.; // mph
 
-  h.onMessage([&ref_vel, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &lane](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&ref_vel, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &vehicle, &controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -258,6 +264,22 @@ int main() {
 
           json msgJson;
 
+          // //////////////////////////////////////////////////////////////////////////
+          // integrating into state machine
+
+          vehicle.UpdateCurrentMeasurement(new Measurement(-100, car_x, car_y, car_speed / 2.24 * cos(deg2rad(car_yaw)), car_speed / 2.24 * sin(deg2rad(car_yaw)), car_s,car_d));
+
+          vector<Measurement> traffic;
+          for (int i = 0; i<sensor_fusion.size(); i++)
+          {
+            traffic.push_back(Measurement(sensor_fusion[i][0],sensor_fusion[i][1],sensor_fusion[i][2],sensor_fusion[i][3],sensor_fusion[i][4],sensor_fusion[i][5],sensor_fusion[i][6]));
+          }
+          vehicle.UpdateTraffic(traffic);
+
+          vehicle.machine_->GoToNextBestState(&vehicle);
+
+          // //////////////////////////////////////////////////////////////////////////
+
           int prev_size = previous_path_x.size();
 
           // /////////////////////////////
@@ -269,7 +291,6 @@ int main() {
           }
 
           bool too_close = false;
-
 
           cout << "---------------------------------\n";
           cout << " car EGO ";
@@ -287,23 +308,16 @@ int main() {
           {
             // car is in my lane
 
-//            ["sensor_fusion"] A 2d vector of cars and then that car's
-// [car's unique ID,
-// car's x position in map coordinates,
-// car's y position in map coordinates,
-// car's x velocity in m/s,
-// car's y velocity in m/s,
-// car's s position in frenet coordinates,
-// car's d position in frenet coordinates.
+//            cout << " car id: " << sensor_fusion[i][0];
+//            cout << "; x: " << sensor_fusion[i][1];
+//            cout << "; y: " << sensor_fusion[i][2];
+//            cout << "; vx: " << sensor_fusion[i][3];
+//            cout << "; vy: " << sensor_fusion[i][4];
+//            cout << "; s: " << sensor_fusion[i][5];
+//            cout << "; d: " << sensor_fusion[i][6];
+//            cout << endl;
 
-            cout << " car id: " << sensor_fusion[i][0];
-            cout << "; x: " << sensor_fusion[i][1];
-            cout << "; y: " << sensor_fusion[i][2];
-            cout << "; vx: " << sensor_fusion[i][3];
-            cout << "; vy: " << sensor_fusion[i][4];
-            cout << "; s: " << sensor_fusion[i][5];
-            cout << "; d: " << sensor_fusion[i][6];
-            cout << endl;
+            int lane = controller.lane_;
 
             float d = sensor_fusion[i][6];
             if (d < (2+4*lane+2) && d > 2+4*lane-2) {
@@ -320,9 +334,9 @@ int main() {
                 //  ref_vel = 29.5;
                 too_close = true;
 
-                if (lane > 0) {
-                  lane = 0;
-                }
+//                if (lane > 0) {
+//                  lane = 0;
+//                }
               }
 
             }
@@ -376,6 +390,7 @@ int main() {
             ptsy.push_back(ref_y);
           }
 
+          int lane = controller.lane_;
           // In Frenet add evenly 30m spaced points ahead of the starting reference
           vector<double> next_wp0 = getXY(car_s+30, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
           vector<double> next_wp1 = getXY(car_s+60, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);

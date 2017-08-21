@@ -7,23 +7,30 @@
 #include <iostream>
 
 #include "cruising_state.h"
+#include "chainging_lane_to_left_state.h"
 
 using namespace std;
 
-ChaingingLaneToRightState::ChaingingLaneToRightState() {
-  cout << "   ChaingingLaneToRightState-ctor ";
+ChaingingLaneToRightState::ChaingingLaneToRightState(Controller *controller) {
+  this->controller_ = controller;
 }
 
 ChaingingLaneToRightState::~ChaingingLaneToRightState() {
-  cout << "   ChaingingLaneToRightState-dtor\n";
 }
 
-void ChaingingLaneToRightState::Cruise(Machine *m) {
-  cout << "   going to cruising state\n";
-  m->SetCurrentState(new CruisingState());
-  delete(this);
-}
 
 int ChaingingLaneToRightState::GetProposedLane(int current_lane) {
   return current_lane + 1;
+}
+
+void ChaingingLaneToRightState::ChangeLaneToLeft(Machine *m) {
+  State::ChangeLaneToLeft(m, m->controller_);
+}
+
+void ChaingingLaneToRightState::Cruise(Machine *m) {
+  State::Cruise(m, m->controller_);
+}
+
+void ChaingingLaneToRightState::ChangeLaneToRight(Machine *m) {
+  State::ChangeLaneToRight(m, m->controller_);
 }

@@ -10,11 +10,15 @@
 class ChaingingLaneToLeftState : public State {
 
 public:
-  ChaingingLaneToLeftState();
+  ChaingingLaneToLeftState(Controller *controller);
 
   ~ChaingingLaneToLeftState();
 
+  void ChangeLaneToLeft(Machine *m);
+
   void Cruise(Machine *m);
+
+  void ChangeLaneToRight(Machine *m);
 
   int GetProposedLane(int current_lane);
 };

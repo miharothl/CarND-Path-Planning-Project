@@ -8,19 +8,30 @@
 #include <exception>
 
 #include "../machine.h"
+#include "../../controller.h"
 
 class State
 {
+protected:
+  Controller *controller_;
+
 public:
-  virtual void Cruise(Machine *machine);
+  virtual void Cruise(Machine *machine, Controller *controller);
 
-  virtual void ChangeLaneToLeft(Machine *machine);
+  virtual void ChangeLaneToLeft(Machine *machine, Controller *controller);
+  virtual void ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane);
 
-  virtual void ChangeLaneToRight(Machine *machine);
+  virtual void ChangeLaneToRight(Machine *machine, Controller *controller);
+  virtual void ChangeLaneToRight(Machine *machine, Controller *controller, int current_lane);
 
-  virtual void Ready(Machine *m);
+  virtual void Ready(Machine *m, Controller *controller);
 
   virtual int GetProposedLane(int current_lane);
+
+  virtual void GoToNextBestState(Vehicle* vehicle);
+
+private:
+  double CalculateCost(Vehicle* vehicle, Machine *cost_machine);
 };
 
 class TransitionNotAllowedException: public std::exception

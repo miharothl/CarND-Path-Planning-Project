@@ -5,30 +5,31 @@
 #include "cruising_state.h"
 
 #include <iostream>
+#include <map>
 
 #include "chainging_lane_to_left_state.h"
 #include "chainging_lane_to_right_state.h"
+#include "../../cost/cost.h"
 
 using namespace std;
 
-CruisingState::CruisingState() {
-  cout << "   CruisingState-ctor ";
+CruisingState::CruisingState(Controller *controller) {
+  this->controller_ = controller;
 };
 
 CruisingState::~CruisingState() {
-  cout << "   CruisingState-dtor\n";
+}
+
+void CruisingState::ChangeLaneToLeft(Machine *m) {
+  State::ChangeLaneToLeft(m, m->controller_);
+}
+
+void CruisingState::Cruise(Machine *m) {
+  State::Cruise(m, m->controller_);
+}
+
+void CruisingState::ChangeLaneToRight(Machine *m) {
+  State::ChangeLaneToRight(m, m->controller_);
 };
 
-void CruisingState::ChangeLaneToLeft(Machine *m)
-{
-  cout << "   going to changing_lane_to_left state\n";
-  m->SetCurrentState(new ChaingingLaneToLeftState());
-  delete this;
-}
 
-void CruisingState::ChangeLaneToRight(Machine *m)
-{
-  cout << "   going to changing_lane_to_right state\n";
-  m->SetCurrentState(new ChaingingLaneToRightState());
-  delete this;
-}

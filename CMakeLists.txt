@@ -25,7 +25,8 @@ set(sources
         src/state/states/chainging_lane_to_right_state.cpp
         src/state/states/chainging_lane_to_right_state.h
         src/state/states/ready_state.cpp
-        src/state/states/ready_state.h src/sensor/measurement.h src/sensor/measurement.cpp src/cost/cost.cpp src/cost/cost.h src/cost/vehicle.cpp src/cost/vehicle.h)
+        src/state/states/ready_state.h src/sensor/measurement.h src/sensor/measurement.cpp src/cost/cost.cpp src/cost/cost.h src/cost/vehicle.cpp src/cost/vehicle.h
+        src/cost/road.cpp src/cost/road.h src/controller.cpp src/controller.h)
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin") 
 

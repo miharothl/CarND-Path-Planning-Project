@@ -7,14 +7,20 @@
 
 #include "state.h"
 
+#include <vector>
+
+#include "../../cost/vehicle.h"
+
 class CruisingState: public State
 {
 public:
-  CruisingState();
+  CruisingState(Controller *controller);
 
   ~CruisingState();
 
   void ChangeLaneToLeft(Machine *m);
+
+  void Cruise(Machine *m);
 
   void ChangeLaneToRight(Machine *m);
 };

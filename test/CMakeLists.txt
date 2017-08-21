@@ -29,7 +29,10 @@ set(sources
         cost/cost_tests.cpp
         state/machine_tests.cpp
 
-        vehicle_tests.cpp vehicle_tests.h)
+        vehicle_tests.cpp
+
+        ../src/cost/road.cpp ../src/cost/road.h
+        tools/data.cpp tools/data.h ../src/controller.cpp ../src/controller.h)
 
 ################################
 # GTest
