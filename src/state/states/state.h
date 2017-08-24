@@ -16,7 +16,9 @@ protected:
   Controller *controller_;
 
 public:
-  virtual void Cruise(Machine *machine, Controller *controller);
+  virtual void Cruise(Machine *machine, Controller *controller, Vehicle *vehicle);
+
+  virtual void Follow(Machine *machine, Controller *controller, Vehicle *vehicle);
 
   virtual void ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane);
 
@@ -25,6 +27,12 @@ public:
   virtual void Ready(Machine *m, Controller *controller);
 
   virtual int GetProposedLane(int current_lane);
+
+  virtual double CostForState();
+
+  virtual bool IsChaingingLanes();
+
+  virtual double GetTargetSpeed(Vehicle* vehicle);
 
   virtual void GoToNextBestState(Vehicle* vehicle);
 

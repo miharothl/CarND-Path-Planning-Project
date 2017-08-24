@@ -9,7 +9,7 @@
 
 void Controller::SetTargetLaneAndSpeed(int lane) {
   this->lane_ = lane;
-  this->target_speed_ = this->road_->GetPreferedSpeedForLane(lane);
+  this->target_speed_ = this->road_->GetSpeedLimitForLane(lane);
 }
 
 int Controller::GetTargetLane() {
@@ -24,4 +24,8 @@ Controller::Controller(int lane) {
 
 double Controller::GetTargetSpeed() {
   return target_speed_;
+}
+
+void Controller::SetTargetSpeed(double speed) {
+  target_speed_ = speed;
 }

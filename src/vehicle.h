@@ -27,11 +27,13 @@ public:
 
   int GetLane();
 
-  int GetProposedLane();
+  int GetTargetLane();
 
-  void UpdateCurrentMeasurement(Measurement *measurement);
+  double GetTargetSpeed();
 
-  void UpdateTraffic(std::vector<Measurement> measurements);
+  void UpdateEgoData(Measurement *measurement);
+
+  void UpdateTrafficData(std::vector<Measurement> measurements);
 
   void PlanPath();
 };

@@ -1,5 +1,4 @@
-#include <fstream>
-#include <math.h>
+#include <fstream> #include <math.h>
 #include <uWS/uWS.h>
 #include <chrono>
 #include <iostream>
@@ -216,8 +215,8 @@ int main() {
 
   Controller controller(1);
   Machine machine(&controller);
-  machine.Cruise();
   Vehicle vehicle(&machine);
+  machine.Cruise(&vehicle);
 
   // start in lane 1
   int lane = 1;
@@ -267,14 +266,15 @@ int main() {
           // //////////////////////////////////////////////////////////////////////////
           // integrating into state machine
 
-          vehicle.UpdateCurrentMeasurement(new Measurement(-100, car_x, car_y, car_speed / 2.24 * cos(deg2rad(car_yaw)), car_speed / 2.24 * sin(deg2rad(car_yaw)), car_s,car_d));
+          vehicle.UpdateEgoData(new Measurement(-100, car_x, car_y, car_speed / 2.24 * cos(deg2rad(car_yaw)),
+                                                car_speed / 2.24 * sin(deg2rad(car_yaw)), car_s, car_d));
 
           vector<Measurement> traffic;
           for (int i = 0; i<sensor_fusion.size(); i++)
           {
             traffic.push_back(Measurement(sensor_fusion[i][0],sensor_fusion[i][1],sensor_fusion[i][2],sensor_fusion[i][3],sensor_fusion[i][4],sensor_fusion[i][5],sensor_fusion[i][6]));
           }
-          vehicle.UpdateTraffic(traffic);
+          vehicle.UpdateTrafficData(traffic);
 
           vehicle.machine_->GoToNextBestState(&vehicle);
 
@@ -342,10 +342,11 @@ int main() {
             }
           }
 
-          if (too_close) {
-            ref_vel -= .224;
-          }
-          else if (ref_vel < controller.GetTargetSpeed())
+//          if (too_close) {
+//            ref_vel -= .224;
+//          }
+//          else
+          if (ref_vel < controller.GetTargetSpeed())
           {
             ref_vel += .224;
           }

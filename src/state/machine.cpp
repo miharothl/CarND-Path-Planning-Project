@@ -25,7 +25,7 @@ Machine::Machine(const Machine& source)
 {
   if (source.current_)
   {
-    this->current_ = new ReadyState(this->controller_);
+    this->current_ = new ReadyState(NULL);
     this->controller_ = NULL;
   }
 }
@@ -43,8 +43,13 @@ void Machine::GetReady() {
   current_->Ready(this, this->controller_);
 }
 
-void Machine::Cruise(){
-  this->current_->Cruise(this, this->controller_);
+void Machine::Cruise(Vehicle *vehicle){
+  this->current_->Cruise(this, this->controller_, vehicle);
+}
+
+
+void Machine::Follow(Vehicle *vehicle) {
+  this->current_->Follow(this, this->controller_, vehicle);
 }
 
 void Machine::ChangeLaneToLeft(int current_lane) {
@@ -58,6 +63,10 @@ void Machine::ChangeLaneToRight(int current_lane) {
 int Machine::GetProposedLane(int current_lane) {
   std::cout << "proposed:" <<  this->current_->GetProposedLane(current_lane) << std::endl;
   return this->current_->GetProposedLane(current_lane);
+}
+
+double Machine::GetTargetSpeed(Vehicle *vehicle) {
+  return this->current_->GetTargetSpeed(vehicle);
 }
 
 void Machine::GoToNextBestState(Vehicle *vehicle) {

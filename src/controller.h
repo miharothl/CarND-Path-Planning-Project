@@ -16,6 +16,7 @@ public:
   void SetTargetLaneAndSpeed(int);
 
   double GetTargetSpeed();
+  void SetTargetSpeed(double);
 
 private:
 

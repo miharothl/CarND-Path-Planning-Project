@@ -29,17 +29,17 @@ public:
 
   void GetReady();
   
-  void Cruise();
+  void Cruise(Vehicle *vehicle);
 
-//  void ChangeLaneToLeft();
+  void Follow(Vehicle *vehicle);
 
   void ChangeLaneToLeft(int current_lane);
-
-//  void ChangeLaneToRight();
 
   void ChangeLaneToRight(int current_lane);
 
   int GetProposedLane(int current_lane);
+
+  double GetTargetSpeed(Vehicle *vehicle);
 
   void GoToNextBestState(Vehicle *vehicle);
 };

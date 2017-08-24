@@ -11,7 +11,7 @@ public:
 
   bool IsLaneAllowed(int lane);
 
-  double GetPreferedSpeedForLane(int lane);
+  double GetSpeedLimitForLane(int lane);
 
 };
 

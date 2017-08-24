@@ -22,16 +22,16 @@ bool Road::IsLaneAllowed(int lane) {
   }
 }
 
-double Road::GetPreferedSpeedForLane(int lane) {
+double Road::GetSpeedLimitForLane(int lane) {
 
   switch (lane)
   {
     case 0:
-      return 22.2; // m/s
+      return 22.; // m/s
     case 1:
       return 21.; // m/s
     case 2:
-      return 19.; // m/s
+      return 20.; // m/s
     default:
       return 10;
   }

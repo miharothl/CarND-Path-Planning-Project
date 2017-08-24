@@ -21,3 +21,7 @@ ChaingingLaneToRightState::~ChaingingLaneToRightState() {
 int ChaingingLaneToRightState::GetProposedLane(int current_lane) {
   return current_lane + 1;
 }
+
+bool ChaingingLaneToRightState::IsChaingingLanes() {
+  return true;
+}

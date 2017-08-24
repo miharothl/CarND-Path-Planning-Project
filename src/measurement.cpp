@@ -2,6 +2,7 @@
 // Created by Miha Röthl on 17/08/2017.
 //
 
+#include <cmath>
 #include "measurement.h"
 
 Measurement::Measurement(int id, double x, double y, double vx, double vy, double s, double d) {
@@ -27,4 +28,8 @@ double Measurement::Vy() { return this->vy_; }
 double Measurement::D() { return this->d_; }
 
 double Measurement::S() { return this->s_; }
+
+double Measurement::V() {
+  return sqrt(vx_*vx_ + vy_*vy_);
+}
 

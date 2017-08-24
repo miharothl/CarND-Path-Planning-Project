@@ -24,6 +24,8 @@ public:
   double Vy();
   double S();
   double D();
+
+  double V();
 };
 
 #endif //PATH_PLANNING_MEASUREMENT_H

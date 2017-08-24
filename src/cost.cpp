@@ -18,6 +18,7 @@ double Cost::CalculateCost(Vehicle *vehicle) {
 
   cost += ChangeLaneCost(vehicle, vehicle->meassurements_);
   cost += ColisionCost(vehicle, vehicle->meassurements_);
+  cost += this->CouldGoFaster(vehicle, vehicle->meassurements_);
 
   auto cur_state = vehicle->machine_->GetCurrentState();
 
@@ -30,7 +31,7 @@ double Cost::CalculateCost(Vehicle *vehicle) {
 double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
 
   int current = vehicle->GetLane();
-  int proposed = vehicle->GetProposedLane();
+  int proposed = vehicle->GetTargetLane();
 
   Road road;
 
@@ -52,7 +53,7 @@ double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_me
 double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
 
   int current = vehicle->GetLane();
-  int proposed = vehicle->GetProposedLane();
+  int proposed = vehicle->GetTargetLane();
 
   double cost = 0.;
 
@@ -67,19 +68,22 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
     }
   }
 
-  bool colision = false;
+  bool collision = false;
 
   for (auto f : filtered_by_lane)
   {
     auto ego_s = vehicle->current_measurement_->S();
 
-    if ((f.S() > ego_s) && (f.S() - ego_s < 30))
+    if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
     {
-      colision = true;
+      if (vehicle->GetTargetSpeed() > f.V())
+        collision = true;
+
+      cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
     }
   }
 
-  if (colision) {
+  if (collision) {
     auto time_til_collision = 1;
     auto exponent = pow(float(time_til_collision), 2);
     auto mult = exp(-exponent);
@@ -89,3 +93,25 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
 
   return cost;
 }
+
+double Cost::CouldGoFaster(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
+
+  double cost;
+  cost = 0;
+
+  if (vehicle->GetTargetLane() - vehicle->GetLane() < 0)
+  {
+    cost = -10025;
+  }
+
+//  if (vehicle->machine_->GetCurrentState()->IsChaingingLanes()) {
+//    if (vehicle->current_measurement_->V() < vehicle->GetTargetSpeed()) {
+//      cost = cost - 10000;
+//      cout << "Could Go Faster" << endl;
+//    }
+//  }
+  return cost;
+}
+
+
+

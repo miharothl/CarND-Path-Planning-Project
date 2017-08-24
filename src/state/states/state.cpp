@@ -11,12 +11,32 @@
 #include "chainging_lane_to_right_state.h"
 #include "chainging_lane_to_left_state.h"
 #include "cruising_state.h"
+#include "following_state.h"
 
 
 using namespace std;
 
-void State::Cruise(Machine *machine, Controller *controller){
+void State::Cruise(Machine *machine, Controller *controller, Vehicle *vehicle){
   machine->SetCurrentState(new CruisingState(controller));
+
+  if (this->controller_ != NULL) {
+    this->controller_->SetTargetSpeed(vehicle->GetTargetSpeed());
+
+    cout << "Controller_speed:   " << this->controller_->GetTargetSpeed() << endl;
+  }
+  delete(this);
+}
+
+
+void State::Follow(Machine *machine, Controller *controller, Vehicle *vehicle) {
+  machine->SetCurrentState(new FollowingState(controller));
+
+  if (this->controller_ != NULL) {
+    this->controller_->SetTargetSpeed(vehicle->GetTargetSpeed());
+
+    cout << "Controller_speed:   " << this->controller_->GetTargetSpeed() << endl;
+  }
+
   delete(this);
 }
 
@@ -30,7 +50,6 @@ void State::ChangeLaneToLeft(Machine *machine, Controller *controller, int curre
 
   delete(this);
 }
-
 
 void State::ChangeLaneToRight(Machine *machine, Controller *controller, int current_lane) {
   machine->SetCurrentState(new ChaingingLaneToRightState(controller));
@@ -61,11 +80,41 @@ void State::GoToNextBestState(Vehicle* vehicle)
   double min_cost = 999999999;
   string best_state = "";
 
+
   try {
     Machine cost_machine = *(vehicle->machine_);
-    cost_machine.Cruise();
-    cost_machine.ChangeLaneToLeft(vehicle->GetLane());
-    auto cost = this->CalculateCost(vehicle, &cost_machine);
+    Vehicle cost_vehicle(&cost_machine);
+
+    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
+    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+
+    cost_machine.Cruise(&cost_vehicle);
+
+    Cost cost_computer;
+    auto cost = cost_computer.CalculateCost(&cost_vehicle);
+
+    if (cost < min_cost) {
+      best_state = "C";
+      min_cost = cost;
+    }
+  }
+  catch (...) {
+
+  }
+
+
+  try {
+    Machine cost_machine = *(vehicle->machine_);
+    Vehicle cost_vehicle(&cost_machine);
+
+    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
+    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+
+    cost_machine.Cruise(&cost_vehicle);
+    cost_machine.ChangeLaneToLeft(cost_vehicle.GetLane());
+
+    Cost cost_computer;
+    auto cost = cost_computer.CalculateCost(&cost_vehicle);
 
     if (cost < min_cost) {
       best_state = "CLTL";
@@ -78,11 +127,19 @@ void State::GoToNextBestState(Vehicle* vehicle)
 
   try {
     Machine cost_machine = *(vehicle->machine_);
-    cost_machine.Cruise();
-    auto cost = this->CalculateCost(vehicle, &cost_machine);
+    Vehicle cost_vehicle(&cost_machine);
+
+    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
+    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+
+    cost_machine.Cruise(&cost_vehicle);
+    cost_machine.Follow(&cost_vehicle);
+
+    Cost cost_computer;
+    auto cost = cost_computer.CalculateCost(&cost_vehicle);
 
     if (cost < min_cost) {
-      best_state = "C";
+      best_state = "F";
       min_cost = cost;
     }
   }
@@ -92,9 +149,16 @@ void State::GoToNextBestState(Vehicle* vehicle)
 
   try {
     Machine cost_machine = *(vehicle->machine_);
-    cost_machine.Cruise();
-    cost_machine.ChangeLaneToRight(vehicle->GetLane());
-    auto cost = this->CalculateCost(vehicle, &cost_machine);
+    Vehicle cost_vehicle(&cost_machine);
+
+    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
+    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+
+    cost_machine.Cruise(&cost_vehicle);
+    cost_machine.ChangeLaneToRight(cost_vehicle.GetLane());
+
+    Cost cost_computer;
+    auto cost = cost_computer.CalculateCost(&cost_vehicle);
 
     if (cost < min_cost) {
       best_state = "CLTR";
@@ -105,6 +169,13 @@ void State::GoToNextBestState(Vehicle* vehicle)
 
   }
 
+  if (best_state.compare("F") == 0) {
+    vehicle->machine_->Follow(vehicle);
+
+    std::cout << "------------> FOLLOWING"  << endl;
+    return;
+  }
+
   if (best_state.compare("CLTL") == 0) {
     vehicle->machine_->ChangeLaneToLeft(vehicle->GetLane());
 
@@ -113,7 +184,7 @@ void State::GoToNextBestState(Vehicle* vehicle)
   }
 
   if (best_state.compare("C") == 0 ) {
-    vehicle->machine_->Cruise();
+    vehicle->machine_->Cruise(vehicle);
     std::cout << "------------> CRUISING"  << endl;
     return;
   }
@@ -125,15 +196,25 @@ void State::GoToNextBestState(Vehicle* vehicle)
   }
 }
 
-
 double State::CalculateCost(Vehicle* vehicle, Machine *cost_machine) {
 
   Vehicle cost_vehicle(cost_machine);
-  cost_vehicle.UpdateCurrentMeasurement(vehicle->current_measurement_);
-  cost_vehicle.UpdateTraffic(vehicle->meassurements_);
+  cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
+  cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
 
   Cost cost;
   return cost.CalculateCost(&cost_vehicle);
 }
 
+double State::GetTargetSpeed(Vehicle *vehicle) {
+  Road road;
+  return road.GetSpeedLimitForLane(vehicle->GetTargetLane());
+}
 
+double State::CostForState() {
+  return 0;
+}
+
+bool State::IsChaingingLanes() {
+  return false;
+}

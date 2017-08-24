@@ -3,6 +3,7 @@
 //
 
 #include "data.h"
+#include "../../src/controller.h"
 
 
 using namespace std;
@@ -31,5 +32,183 @@ vector<Measurement> Data::GenerateApproachingTraffic() {
 Measurement Data::GenerageEgoMeasurement()
 {
   return Measurement(-100, 1284.63 , 1187.22 , 22.0218 , -0.799344, 530.087 , 5.83056 );
+}
+
+
+
+vector<Measurement> Data::GenerateCase5FollowingTraffic() {
+
+  vector<Measurement> trafic_measurements;
+
+  trafic_measurements.push_back(Measurement(   0, 1384.73 , 1178.154, 10.98248, -1.042714, 555.1682, 1.979259));
+
+  return trafic_measurements;
+}
+
+Measurement Data::GenerageCase5FollowingEgo()
+{
+  return Measurement(-100, 1284.63 , 1187.22 , 22.0218 , -0.799344, 530.087 , 1.83056 );
+}
+
+
+
+Vehicle Data::GenerateVehicleInTheMiddleLaneOfTheEmptyRoad() {
+
+  //      L   M   R
+  //   ||   |   |   ||
+  //   ||   | V |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kMiddleLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+
+  auto ego = EgoInTheMiddleLane();
+  auto traffic = TrafficNoTraffic();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+}
+
+Vehicle Data::GenerateVehicleInTheLeftLaneOfTheEmptyRoad() {
+
+  //      L   M   R
+  //   ||   |   |   ||
+  //   || V |   |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kLeftLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+
+  auto ego = EgoInLeftLane();
+  auto traffic = TrafficNoTraffic();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+}
+
+Vehicle Data::GenerateVehicleInTheMiddleLaneFollowingTraffic() {
+
+  //      L   M   R
+  //   ||   |   |   ||
+  //   ||   | 8 |   ||
+  //   ||   |   |   ||
+  //   ||   | V |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kLeftLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+  machine->Follow(&vehicle);
+
+  auto ego = EgoInTheMiddleLane();
+  auto traffic = TrafficInTheMiddleLaneAhead();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+}
+
+Vehicle Data::GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAhead() {
+  //      L   M   R
+  //   ||   |   |   ||
+  //   || 7 | 8 |   ||
+  //   ||   |   |   ||
+  //   ||   | V |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kMiddleLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+  machine->Follow(&vehicle);
+
+  auto ego = EgoInTheMiddleLane();
+  auto traffic = TrafficInTheLeftAndTheMiddleLaneAhead();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+}
+
+Vehicle Data::GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAndRightAhead() {
+  //      L   M   R
+  //   ||   |   |   ||
+  //   || 7 | 8 | 9 ||
+  //   ||   |   |   ||
+  //   ||   | V |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kMiddleLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+  machine->Follow(&vehicle);
+
+  auto ego = EgoInTheMiddleLane();
+  auto traffic = TrafficInAllLanesAhead();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+
+}
+
+Measurement* Data::EgoInTheMiddleLane()
+{
+  return new Measurement(-100, 0. , 0. , 15. , 0., 100. , 6.00005 );
+}
+
+Measurement* Data::EgoInLeftLane() {
+  return new Measurement(-100, 0. , 0. , 15. , 0., 100. , 2.00005 );
+}
+
+vector<Measurement> Data::TrafficNoTraffic()
+{
+  vector<Measurement> traffic;
+  return traffic;
+}
+
+std::vector<Measurement> Data::TrafficInTheMiddleLaneAhead() {
+
+  vector<Measurement> traffic;
+  traffic.push_back(Measurement( 8, 0. , 0. , 15. , 0., 120. , 6. ));
+
+  return traffic;
+}
+
+std::vector<Measurement> Data::TrafficInTheLeftAndTheMiddleLaneAhead() {
+
+  vector<Measurement> traffic;
+  traffic.push_back(Measurement( 7, 0. , 0. , 15. , 0., 120. , 2. ));
+  traffic.push_back(Measurement( 8, 0. , 0. , 15. , 0., 120. , 6. ));
+
+  return traffic;
+}
+
+std::vector<Measurement> Data::TrafficInAllLanesAhead() {
+
+  vector<Measurement> traffic;
+  traffic.push_back(Measurement( 7, 0. , 0. , 15. , 0., 120. , 2. ));
+  traffic.push_back(Measurement( 8, 0. , 0. , 15. , 0., 120. , 6. ));
+  traffic.push_back(Measurement( 8, 0. , 0. , 15. , 0., 120. , 10. ));
+
+  return traffic;
 }
 

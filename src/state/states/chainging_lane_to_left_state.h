@@ -15,6 +15,8 @@ public:
   ~ChaingingLaneToLeftState();
 
   int GetProposedLane(int current_lane);
+
+  bool IsChaingingLanes();
 };
 
 #endif //PATH_PLANNING_CHAINGING_LANE_LEFT_H

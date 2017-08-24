@@ -36,8 +36,8 @@ TEST(cost, Should_CostShouldBeHigher_When_ColisionDetected)
   Machine machine;
   Vehicle vehicle(&machine);
 
-  vehicle.UpdateCurrentMeasurement(&ego_measurement);
-  machine.Cruise();
+  vehicle.UpdateEgoData(&ego_measurement);
+  machine.Cruise(&vehicle);
 
   Cost cost;
   auto colision_cost = cost.ColisionCost(&vehicle, trafic_measurements);
@@ -63,14 +63,14 @@ TEST(cost, Should_CostShouldBeHigher_When_ChaingingLanes)
   Machine machine;
   Vehicle vehicle(&machine);
 
-  vehicle.UpdateCurrentMeasurement(&ego_measurement);
+  vehicle.UpdateEgoData(&ego_measurement);
 
   Cost cost;
   double changeLaneCost;
   changeLaneCost = cost.ChangeLaneCost(&vehicle, trafic_measurements);
   EXPECT_EQ(changeLaneCost, 0.);
 
-  machine.Cruise();
+  machine.Cruise(&vehicle);
   machine.ChangeLaneToLeft(1);
   changeLaneCost = cost.ChangeLaneCost(&vehicle, trafic_measurements);
   EXPECT_EQ(changeLaneCost, cost.kComfort);

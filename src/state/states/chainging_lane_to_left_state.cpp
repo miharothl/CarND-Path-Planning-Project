@@ -23,6 +23,10 @@ int ChaingingLaneToLeftState::GetProposedLane(int current_lane) {
   return current_lane - 1;
 }
 
+bool ChaingingLaneToLeftState::IsChaingingLanes() {
+  return true;
+}
+
 //void ChaingingLaneToLeftState::ChangeLaneToLeft(Machine *m) {
 //  State::ChangeLaneToLeft(m, m->controller_);
 //}

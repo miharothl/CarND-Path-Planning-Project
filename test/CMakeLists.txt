@@ -32,7 +32,7 @@ set(sources
         vehicle_tests.cpp
 
         ../src/road.cpp ../src/road.h
-        tools/data.cpp tools/data.h ../src/controller.cpp ../src/controller.h)
+        tools/data.cpp tools/data.h ../src/controller.cpp ../src/controller.h ../src/state/states/following_state.cpp ../src/state/states/following_state.h)
 
 ################################
 # GTest

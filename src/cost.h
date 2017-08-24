@@ -26,6 +26,8 @@ public:
   double ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 
   double ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+  double CouldGoFaster(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+
 };
 
 
