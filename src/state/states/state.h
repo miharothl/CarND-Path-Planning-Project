@@ -29,6 +29,7 @@ public:
   virtual int GetProposedLane(int current_lane);
 
   virtual double CostForState();
+  virtual double CostForState(double ego_speed, double traffic_speed);
 
   virtual bool IsChaingingLanes();
 

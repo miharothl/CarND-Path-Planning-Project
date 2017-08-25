@@ -18,6 +18,7 @@ public:
   double GetTargetSpeed(Vehicle* vehicle);
 
   double CostForState();
+  double CostForState(double ego_speed, double traffic_speed);
 };
 
 #endif //PATH_PLANNING_FOLLOWING_STATE_H

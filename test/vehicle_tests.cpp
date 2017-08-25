@@ -180,6 +180,17 @@ TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
 }
 
 TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
+  Data data;
+  Road road;
 
+  auto vehicle = data.GenerateVehicleInTheLeftLaneFollowingFastTraffic();
+
+  vehicle.PlanPath();
+
+  auto target_lane = vehicle.GetTargetLane();
+  auto target_speed = vehicle.GetTargetSpeed();
+
+  EXPECT_EQ(target_lane, data.kLeftLane);
+  EXPECT_TRUE(target_speed < road.GetSpeedLimitForLane(data.kLeftLane));
 }
 

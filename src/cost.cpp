@@ -77,11 +77,23 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
     if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
     {
       if (vehicle->GetTargetSpeed() > f.V())
+      {
         collision = true;
+      }
 
-      cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
+//      auto ego = vehicle->GetTargetSpeed();
+//      auto traffic = f.V();
+//
+//      cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
     }
   }
+
+   auto ego = vehicle->GetTargetSpeed();
+   auto traffic = road.GetSpeedLimitForLane(vehicle->GetTargetLane());
+
+   cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
+
+  cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
 
   if (collision) {
     auto time_til_collision = 1;

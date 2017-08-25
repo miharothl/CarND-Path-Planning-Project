@@ -348,11 +348,13 @@ int main() {
 //          else
           if (ref_vel < controller.GetTargetSpeed())
           {
-            ref_vel += .224;
+//            ref_vel += .224;
+            ref_vel += .2;
           }
           else if (ref_vel > controller.GetTargetSpeed())
           {
-            ref_vel -= .224;
+//            ref_vel -= .224;
+            ref_vel -= .2;
           }
 
           // SENSOR FUSION END

@@ -5,14 +5,12 @@
 #ifndef PATH_PLANNING_DATA_H
 #define PATH_PLANNING_DATA_H
 
-
 #include <vector>
 
 #include "../../src/measurement.h"
 #include "../../src/vehicle.h"
 
 class Data {
-
 
 public:
   const int kLeftLane = 0;
@@ -26,21 +24,23 @@ public:
   std::vector<Measurement> GenerateCase5FollowingTraffic();
   Measurement GenerageCase5FollowingEgo();
 
-
   Vehicle GenerateVehicleInTheMiddleLaneOfTheEmptyRoad();
   Vehicle GenerateVehicleInTheLeftLaneOfTheEmptyRoad();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTraffic();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAhead();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAndRightAhead();
+  Vehicle GenerateVehicleInTheLeftLaneFollowingFastTraffic();
 
 private:
   Measurement* EgoInTheMiddleLane();
   Measurement* EgoInLeftLane();
+  Measurement* EgoInTheLeftLaneGoingFast();
+
   std::vector<Measurement> TrafficNoTraffic();
   std::vector<Measurement> TrafficInTheMiddleLaneAhead();
   std::vector<Measurement> TrafficInTheLeftAndTheMiddleLaneAhead();
   std::vector<Measurement> TrafficInAllLanesAhead();
+  std::vector<Measurement> TrafficInTheLeftLaneAheadGoingFast();
 };
-
 
 #endif //PATH_PLANNING_DATA_H

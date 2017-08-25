@@ -17,6 +17,11 @@ public:
   int GetProposedLane(int current_lane);
 
   bool IsChaingingLanes();
+
+  double CostForState();
+
+  double CostForState(double ego_speed, double traffic_speed);
+
 };
 
 #endif //PATH_PLANNING_CHAINGING_LANE_LEFT_H

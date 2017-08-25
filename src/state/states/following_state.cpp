@@ -7,6 +7,7 @@
 #include "following_state.h"
 
 #include <vector>
+#include <cmath>
 
 #include "../../vehicle.h"
 
@@ -58,4 +59,13 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
 
 double FollowingState::CostForState() {
   return 10050;
+}
+
+double FollowingState::CostForState(double ego_speed, double traffic_speed) {
+
+  if (fabs(ego_speed - traffic_speed) < 2.)
+  {
+    return -500;
+  }
+  return 0.;
 }

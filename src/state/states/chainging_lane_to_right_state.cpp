@@ -5,6 +5,7 @@
 #include "chainging_lane_to_right_state.h"
 
 #include <iostream>
+#include <cmath>
 
 #include "cruising_state.h"
 #include "chainging_lane_to_left_state.h"
@@ -25,3 +26,19 @@ int ChaingingLaneToRightState::GetProposedLane(int current_lane) {
 bool ChaingingLaneToRightState::IsChaingingLanes() {
   return true;
 }
+
+double ChaingingLaneToRightState::CostForState() {
+
+  return -500;
+  return 0;
+}
+
+double ChaingingLaneToRightState::CostForState(double ego_speed, double traffic_speed) {
+
+  if (fabs(ego_speed - traffic_speed) < 2.)
+  {
+    return +500;
+  }
+  return 0.;
+}
+

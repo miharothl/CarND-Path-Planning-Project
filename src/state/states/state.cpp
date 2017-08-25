@@ -218,3 +218,7 @@ double State::CostForState() {
 bool State::IsChaingingLanes() {
   return false;
 }
+
+double State::CostForState(double ego_speed, double traffic_speed) {
+  return 0;
+}

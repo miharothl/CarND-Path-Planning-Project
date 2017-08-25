@@ -34,8 +34,6 @@ Measurement Data::GenerageEgoMeasurement()
   return Measurement(-100, 1284.63 , 1187.22 , 22.0218 , -0.799344, 530.087 , 5.83056 );
 }
 
-
-
 vector<Measurement> Data::GenerateCase5FollowingTraffic() {
 
   vector<Measurement> trafic_measurements;
@@ -49,8 +47,6 @@ Measurement Data::GenerageCase5FollowingEgo()
 {
   return Measurement(-100, 1284.63 , 1187.22 , 22.0218 , -0.799344, 530.087 , 1.83056 );
 }
-
-
 
 Vehicle Data::GenerateVehicleInTheMiddleLaneOfTheEmptyRoad() {
 
@@ -170,6 +166,31 @@ Vehicle Data::GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftA
 
 }
 
+
+Vehicle Data::GenerateVehicleInTheLeftLaneFollowingFastTraffic() {
+  //      L   M   R
+  //   ||   |   |   ||
+  //   || 5 |   |   ||
+  //   ||   |   |   ||
+  //   || V |   |   ||
+  //   ||   |   |   ||
+
+  Controller *controller = new Controller(kMiddleLane);
+  Machine *machine = new Machine(controller);
+
+  Vehicle vehicle(machine);
+  machine->Cruise(&vehicle);
+  machine->Follow(&vehicle);
+
+  auto ego = EgoInTheLeftLaneGoingFast();
+  auto traffic = TrafficInTheLeftLaneAheadGoingFast();
+
+  vehicle.UpdateEgoData(ego);
+  vehicle.UpdateTrafficData(traffic);
+
+  return vehicle;
+}
+
 Measurement* Data::EgoInTheMiddleLane()
 {
   return new Measurement(-100, 0. , 0. , 15. , 0., 100. , 6.00005 );
@@ -177,6 +198,11 @@ Measurement* Data::EgoInTheMiddleLane()
 
 Measurement* Data::EgoInLeftLane() {
   return new Measurement(-100, 0. , 0. , 15. , 0., 100. , 2.00005 );
+}
+
+Measurement* Data::EgoInTheLeftLaneGoingFast()
+{
+  return new Measurement(-100, 0. , 0. , 20. , 0., 100. , 2.00005 );
 }
 
 vector<Measurement> Data::TrafficNoTraffic()
@@ -212,3 +238,10 @@ std::vector<Measurement> Data::TrafficInAllLanesAhead() {
   return traffic;
 }
 
+std::vector<Measurement> Data::TrafficInTheLeftLaneAheadGoingFast() {
+
+  vector<Measurement> traffic;
+  traffic.push_back(Measurement( 5, 0. , 0. , 21. , 0., 120. , 2. ));
+
+  return traffic;
+}
