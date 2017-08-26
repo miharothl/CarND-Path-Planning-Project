@@ -11,6 +11,7 @@
 #include "../src/measurement.h"
 #include "../src/vehicle.h"
 #include "../src/state/states/state.h"
+#include "../src/state/states/following_state.h"
 #include "../src/state/states/ready_state.h"
 #include "../src/state/states/cruising_state.h"
 #include "../src/state/states/chainging_lane_to_left_state.h"
@@ -20,7 +21,7 @@
 
 using namespace std;
 
-TEST(vehicle, Should_ReturnCorrectLaneIdentifier_When_MeasurementInLane)
+TEST(Vehicle, Should_ReturnCorrectLaneIdentifier_When_MeasurementInLane)
 {
   Machine machine;
   Vehicle vehicle(&machine);
@@ -54,63 +55,15 @@ TEST(vehicle, Should_ReturnCorrectLaneIdentifier_When_MeasurementInLane)
   EXPECT_EQ(2, vehicle.GetLane());
 }
 
-TEST(vehicle, Should_BeAbleToStopFollowing_When_CarCouldBeOverTaken) {
-
-  Data data;
-
-//  Controller controller(1);
-//  Machine machine(&controller);
-  Machine machine;
-
-  Vehicle vehicle(&machine);
-  machine.Cruise(&vehicle);
-
-  auto ego_measurement = data.GenerageCase5FollowingEgo();
-  auto traffic_measurement = data.GenerateCase5FollowingTraffic();
-
-  vehicle.UpdateEgoData(&ego_measurement);
-  vehicle.UpdateTrafficData(traffic_measurement);
-
-  vehicle.PlanPath();
-
-  auto proposed = vehicle.GetTargetLane();
-
-  EXPECT_EQ(1, proposed);
-}
-
-
-TEST(vehicle, Should_BeAbleToPlanPath_When_MeasurementIsGeven) {
-
-  Data data;
-
-//  Controller controller(1);
-//  Machine machine(&controller);
-  Machine machine;
-
-  Vehicle vehicle(&machine);
-  machine.Cruise(&vehicle);
-
-  auto ego_measurement = data.GenerageCase5FollowingEgo();
-  auto traffic_measurement = data.GenerateCase5FollowingTraffic();
-
-  vehicle.UpdateEgoData(&ego_measurement);
-  vehicle.UpdateTrafficData(traffic_measurement);
-
-  vehicle.PlanPath();
-
-  auto proposed = vehicle.GetTargetLane();
-
-  EXPECT_EQ(1, proposed);
-}
-
-
-TEST(vehicle, Should_AlwaysDriveOnTheRightSideOfTheRoad) {
+TEST(Vehicle, Should_AlwaysDriveOnTheRightSideOfTheRoad) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheLeftLaneOfTheEmptyRoad();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(CruisingState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -119,13 +72,15 @@ TEST(vehicle, Should_AlwaysDriveOnTheRightSideOfTheRoad) {
   EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
 }
 
-TEST(vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
+TEST(Vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheMiddleLaneOfTheEmptyRoad();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -134,13 +89,15 @@ TEST(vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
   EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
 }
 
-TEST(vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
+TEST(Vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheMiddleLaneFollowingTraffic();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -149,13 +106,15 @@ TEST(vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
   EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
 }
 
-TEST(vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
+TEST(Vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAhead();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToRightState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -164,13 +123,15 @@ TEST(vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
   EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kRightLane));
 }
 
-TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
+TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAndRightAhead();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(FollowingState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -179,13 +140,15 @@ TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
   EXPECT_TRUE(target_speed < road.GetSpeedLimitForLane(data.kMiddleLane));
 }
 
-TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
+TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
   Data data;
   Road road;
 
   auto vehicle = data.GenerateVehicleInTheLeftLaneFollowingFastTraffic();
 
   vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(FollowingState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -194,3 +157,19 @@ TEST(vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
   EXPECT_TRUE(target_speed < road.GetSpeedLimitForLane(data.kLeftLane));
 }
 
+TEST(Vehicle, Should_BeAbleToPlanPath_When_InRealDataScenario) {
+  Data data;
+  Road road;
+
+  auto vehicle = data.GenerateVehicleInRealScenario();
+
+  vehicle.PlanPath();
+  auto current = vehicle.machine_->GetCurrentState();
+  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
+
+  auto target_lane = vehicle.GetTargetLane();
+  auto target_speed = vehicle.GetTargetSpeed();
+
+  EXPECT_EQ(target_lane, data.kLeftLane);
+  EXPECT_TRUE(target_speed == road.GetSpeedLimitForLane(data.kLeftLane));
+}

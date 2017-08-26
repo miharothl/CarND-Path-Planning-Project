@@ -37,7 +37,8 @@ public:
 
   void ChangeLaneToRight(int current_lane);
 
-  int GetProposedLane(int current_lane);
+public:
+  int GetTargetLane(int current_lane);
 
   double GetTargetSpeed(Vehicle *vehicle);
 

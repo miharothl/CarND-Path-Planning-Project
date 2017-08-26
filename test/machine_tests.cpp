@@ -10,91 +10,67 @@
 
 using namespace std;
 
-TEST(sample_test_case, sample_test)
+TEST(StateMachine, Should_BeInReadyState_When_MachineIsInitialised)
 {
-    EXPECT_EQ(1, 1);
-}
-
-TEST(state_machine, Should_BeInReadyState_When_MachineISInitialised)
-{
-  Machine fsm;
-  auto current_state = fsm.GetCurrentState();
+  Machine machine;
+  auto current_state = machine.GetCurrentState();
 
   EXPECT_TRUE(typeid(*current_state) == typeid(ReadyState));
   EXPECT_FALSE(typeid(*current_state) == typeid(CruisingState));
 }
 
-TEST(state_machine, Should_ChangeState_When_ChangeStateIsAllowed)
+TEST(StateMachine, Should_ChangeState_When_ChangeStateIsAllowed)
 {
-  Machine fsm;
-  Vehicle vehicle(&fsm);
-  auto current_state = fsm.GetCurrentState();
+  Machine machine;
+  Vehicle vehicle(&machine);
+  auto current_state = machine.GetCurrentState();
   EXPECT_TRUE(typeid(*current_state) == typeid(ReadyState));
 
-  fsm.Cruise(&vehicle);
-  current_state = fsm.GetCurrentState();
+  machine.Cruise(&vehicle);
+  current_state = machine.GetCurrentState();
   EXPECT_TRUE(typeid(*current_state) == typeid(CruisingState));
 
-  fsm.ChangeLaneToLeft(1);
-  current_state = fsm.GetCurrentState();
+  machine.ChangeLaneToLeft(1);
+  current_state = machine.GetCurrentState();
   EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToLeftState));
 
-  fsm.Cruise(&vehicle);
-  current_state = fsm.GetCurrentState();
+  machine.Cruise(&vehicle);
+  current_state = machine.GetCurrentState();
   EXPECT_TRUE(typeid(*current_state) == typeid(CruisingState));
 
-  fsm.ChangeLaneToRight(1);
-  current_state = fsm.GetCurrentState();
+  machine.ChangeLaneToRight(1);
+  current_state = machine.GetCurrentState();
   EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToRightState));
 }
 
-
-TEST(state_machine, Should_ThrowException_When_StateTransitionIsNotAllowed)
+TEST(StateMachine, Should_TargetLeftLane_When_InChangingLaneToLeftState)
 {
-//  EXPECT_THROW(
-//          {
-//            try
-//            {
-//              Machine fsm;
-//              fsm.ChangeLaneToLeft(1);
-//            }
-//            catch(...) {
-//              throw;
-//            }
-//          }
-//         , TransitionNotAllowedException);
+  Machine machine;
+  Vehicle vehicle(&machine);
+  machine.Cruise(&vehicle);
+  machine.ChangeLaneToLeft(1);
+  int current_lane = 2;
+  int target_lane = machine.GetTargetLane(current_lane);
+  EXPECT_EQ(target_lane, current_lane-1);
 }
 
-
-TEST(state_machine, Should_ProposeLeftLane_When_InChangingLaneToLeftState)
+TEST(StateMachine, Should_TargetRightLane_When_InChangingLaneToRightState)
 {
-
-  Machine fsm;
-  Vehicle vehicle(&fsm);
-  fsm.Cruise(&vehicle);
-  fsm.ChangeLaneToLeft(1);
+  Machine machine;
+  Vehicle vehicle(&machine);
+  machine.Cruise(&vehicle);
+  machine.ChangeLaneToRight(1);
   int current_lane = 2;
-  int proposed_lane = fsm.GetProposedLane(current_lane);
-  EXPECT_EQ(proposed_lane, current_lane-1);
+  int target_lane = machine.GetTargetLane(current_lane);
+  EXPECT_EQ(target_lane, current_lane+1);
 }
 
-TEST(state_machine, Should_ProposeRightLane_When_InChangingLaneToRightState)
+TEST(StateMachine, Should_TargetSameLane_When_InCruisingState)
 {
-  Machine fsm;
-  Vehicle vehicle(&fsm);
-  fsm.Cruise(&vehicle);
-  fsm.ChangeLaneToRight(1);
+  Machine machine;
+  Vehicle vehicle(&machine);
+  machine.Cruise(&vehicle);
   int current_lane = 2;
-  int proposed_lane = fsm.GetProposedLane(current_lane);
-  EXPECT_EQ(proposed_lane, current_lane+1);
-}
-
-TEST(state_machine, Should_ProposeSameLane_When_InCruisingState)
-{
-  Machine fsm;
-  Vehicle vehicle(&fsm);
-  fsm.Cruise(&vehicle);
-  int current_lane = 2;
-  int proposed_lane = fsm.GetProposedLane(current_lane);
-  EXPECT_EQ(proposed_lane, current_lane);
+  int target_lane = machine.GetTargetLane(current_lane);
+  EXPECT_EQ(target_lane, current_lane);
 }

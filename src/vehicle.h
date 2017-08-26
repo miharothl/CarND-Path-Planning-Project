@@ -14,12 +14,11 @@
 class Vehicle {
 
 public:
-  Measurement *current_measurement_;
-  std::vector<Measurement> meassurements_;
+  Measurement *ego_data_;
+  std::vector<Measurement> traffic_data_;
 
 //private:
   Machine *machine_;
-
   Road *road_;
 
 public:

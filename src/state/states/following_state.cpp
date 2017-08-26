@@ -29,7 +29,7 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
 
   Road road;
 
-  for (auto m : vehicle->meassurements_) {
+  for (auto m : vehicle->traffic_data_) {
     if (proposedLane == road.GetLane(m.D()))
     {
       filtered_by_lane.push_back(m);
@@ -41,7 +41,7 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
 
   for (auto f : filtered_by_lane)
   {
-    auto ego_s = vehicle->current_measurement_->S();
+    auto ego_s = vehicle->ego_data_->S();
 
     if ((f.S() > ego_s) && (f.S() - ego_s < 30))
     {

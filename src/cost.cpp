@@ -16,14 +16,13 @@ double Cost::CalculateCost(Vehicle *vehicle) {
 
   double cost = 0.;
 
-  cost += ChangeLaneCost(vehicle, vehicle->meassurements_);
-  cost += ColisionCost(vehicle, vehicle->meassurements_);
-  cost += this->CouldGoFaster(vehicle, vehicle->meassurements_);
+  cost += ChangeLaneCost(vehicle, vehicle->traffic_data_);
+  cost += CollisionCost(vehicle, vehicle->traffic_data_);
+  cost += this->DrivingTowardsLeftSideCost(vehicle, vehicle->traffic_data_);
 
-  auto cur_state = vehicle->machine_->GetCurrentState();
-
-  std::cout << typeid(*cur_state).name();
-  std::cout << " --> cost: " << cost << std::endl;
+//  auto cur_state = vehicle->machine_->GetCurrentState();
+//  std::cout << typeid(*cur_state).name();
+//  std::cout << " --> cost: " << cost << std::endl;
 
  return cost;
 }
@@ -50,7 +49,7 @@ double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_me
   return cost;
 }
 
-double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
+double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
 
   int current = vehicle->GetLane();
   int proposed = vehicle->GetTargetLane();
@@ -72,7 +71,7 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
 
   for (auto f : filtered_by_lane)
   {
-    auto ego_s = vehicle->current_measurement_->S();
+    auto ego_s = vehicle->ego_data_->S();
 
     if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
     {
@@ -80,11 +79,6 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
       {
         collision = true;
       }
-
-//      auto ego = vehicle->GetTargetSpeed();
-//      auto traffic = f.V();
-//
-//      cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
     }
   }
 
@@ -106,7 +100,7 @@ double Cost::ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_meas
   return cost;
 }
 
-double Cost::CouldGoFaster(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
+double Cost::DrivingTowardsLeftSideCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
 
   double cost;
   cost = 0;
@@ -116,12 +110,6 @@ double Cost::CouldGoFaster(Vehicle *vehicle, std::vector<Measurement> trafic_mea
     cost = -10025;
   }
 
-//  if (vehicle->machine_->GetCurrentState()->IsChaingingLanes()) {
-//    if (vehicle->current_measurement_->V() < vehicle->GetTargetSpeed()) {
-//      cost = cost - 10000;
-//      cout << "Could Go Faster" << endl;
-//    }
-//  }
   return cost;
 }
 

@@ -25,10 +25,9 @@ public:
 
   double ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 
-  double ColisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
-  double CouldGoFaster(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
+  double CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 
+  double DrivingTowardsLeftSideCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement);
 };
-
 
 #endif //PATH_PLANNING_COST_H

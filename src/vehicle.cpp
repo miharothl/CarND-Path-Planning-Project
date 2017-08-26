@@ -15,25 +15,24 @@ using namespace std;
 
 Vehicle::Vehicle(Machine* machine)
 {
-  this-> machine_ = machine;
-  this->current_measurement_ = NULL;
-
-  this-> road_ = new Road();
+  this->machine_ = machine;
+  this->ego_data_ = NULL;
+  this->road_ = new Road();
 }
 
 void Vehicle::UpdateEgoData(Measurement *measurement)
 {
-  this->current_measurement_ = measurement;
+  this->ego_data_ = measurement;
 }
 
 void Vehicle::UpdateTrafficData(vector<Measurement> measurements)
 {
-  this->meassurements_ = measurements;
+  this->traffic_data_ = measurements;
 }
 
 int Vehicle::GetLane() {
-  if (current_measurement_) {
-    double d = this->current_measurement_->D();
+  if (ego_data_) {
+    double d = this->ego_data_->D();
     return this->road_->GetLane(d);
   } else {
     return 0;
@@ -41,7 +40,7 @@ int Vehicle::GetLane() {
 }
 
 int Vehicle::GetTargetLane() {
-  return this->machine_->GetProposedLane(this->GetLane());
+  return this->machine_->GetTargetLane(this->GetLane());
 }
 
 double Vehicle::GetTargetSpeed() {

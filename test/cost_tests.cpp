@@ -7,77 +7,37 @@
 
 #include "gtest/gtest.h"
 
-#include "../src/measurement.h"
 #include "../src/vehicle.h"
-#include "../src/state/states/state.h"
-#include "../src/state/states/ready_state.h"
-#include "../src/state/states/cruising_state.h"
-#include "../src/state/states/chainging_lane_to_left_state.h"
-#include "../src/state/states/chainging_lane_to_right_state.h"
 #include "../src/cost.h"
-
 #include "tools/data.h"
 
-using namespace std;
-
-
-
-
-
-
-TEST(cost, Should_CostShouldBeHigher_When_ColisionDetected)
-{
-  auto ego_measurement = Measurement(-100, 1284.63 , 1187.22 , 22.0218 , -0.799344, 530.087 , 5.83056 );
-
-  Data data;
-
-  auto trafic_measurements = data.GenerateApproachingTraffic();
-
-  Machine machine;
-  Vehicle vehicle(&machine);
-
-  vehicle.UpdateEgoData(&ego_measurement);
-  machine.Cruise(&vehicle);
-
-  Cost cost;
-  auto colision_cost = cost.ColisionCost(&vehicle, trafic_measurements);
-  EXPECT_TRUE(colision_cost > 367879);
-
-
-  machine.ChangeLaneToLeft(1);
-  Vehicle vehicleLeft(&machine);
-  colision_cost = cost.ColisionCost(&vehicleLeft, trafic_measurements);
-  EXPECT_TRUE(colision_cost == 0.);
-}
-
-
-
-
-TEST(cost, Should_CostShouldBeHigher_When_ChaingingLanes)
+TEST(ChangeLaneToLeftCost, Should_BeLowerThanFollowingCost_When_FolloiwingVehicleAndNoTrafficOnLeftAhead)
 {
   Data data;
-  auto ego_measurement = data.GenerageEgoMeasurement();
-
-  auto trafic_measurements = data.GenerateApproachingTraffic();
-
-  Machine machine;
-  Vehicle vehicle(&machine);
-
-  vehicle.UpdateEgoData(&ego_measurement);
+  auto vehicle = data.GenerateVehicleInTheMiddleLaneFollowingTraffic();
 
   Cost cost;
-  double changeLaneCost;
-  changeLaneCost = cost.ChangeLaneCost(&vehicle, trafic_measurements);
-  EXPECT_EQ(changeLaneCost, 0.);
+  auto following_cost = cost.CollisionCost(&vehicle, vehicle.traffic_data_);
 
-  machine.Cruise(&vehicle);
-  machine.ChangeLaneToLeft(1);
-  changeLaneCost = cost.ChangeLaneCost(&vehicle, trafic_measurements);
-  EXPECT_EQ(changeLaneCost, cost.kComfort);
+  vehicle.machine_->ChangeLaneToLeft(vehicle.GetLane());
+  auto change_lane_cost = cost.CalculateCost(&vehicle);
+
+  EXPECT_TRUE(change_lane_cost < following_cost);
 }
 
+TEST(ChangeLaneToLeftCost, Should_BeHigherThanFollowingCost_When_FolloiwingVehicleTrafficOnLeftAhead)
+{
+  Data data;
+  auto vehicle = data.GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAhead();
 
+  Cost cost;
+  auto following_cost = cost.CollisionCost(&vehicle, vehicle.traffic_data_);
 
+  vehicle.machine_->ChangeLaneToLeft(vehicle.GetLane());
+  auto change_lane_cost = cost.CalculateCost(&vehicle);
+
+  EXPECT_TRUE(change_lane_cost > following_cost);
+}
 
 /*
  *

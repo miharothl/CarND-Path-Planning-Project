@@ -8,12 +8,12 @@
 
 
 void Controller::SetTargetLaneAndSpeed(int lane) {
-  this->lane_ = lane;
+  this->target_lane_ = lane;
   this->target_speed_ = this->road_->GetSpeedLimitForLane(lane);
 }
 
 int Controller::GetTargetLane() {
-  return lane_;
+  return target_lane_;
 }
 
 Controller::Controller(int lane) {

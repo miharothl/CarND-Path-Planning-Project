@@ -18,29 +18,26 @@ public:
   const int kRightLane = 2;
 
 public:
-  std::vector<Measurement> GenerateApproachingTraffic();
-  Measurement GenerageEgoMeasurement();
-
-  std::vector<Measurement> GenerateCase5FollowingTraffic();
-  Measurement GenerageCase5FollowingEgo();
-
   Vehicle GenerateVehicleInTheMiddleLaneOfTheEmptyRoad();
   Vehicle GenerateVehicleInTheLeftLaneOfTheEmptyRoad();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTraffic();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAhead();
   Vehicle GenerateVehicleInTheMiddleLaneFollowingTrafficAndTrafficOnTheLeftAndRightAhead();
   Vehicle GenerateVehicleInTheLeftLaneFollowingFastTraffic();
+  Vehicle GenerateVehicleInRealScenario();
 
 private:
   Measurement* EgoInTheMiddleLane();
   Measurement* EgoInLeftLane();
   Measurement* EgoInTheLeftLaneGoingFast();
+  Measurement* EgoInRealScenario();
 
   std::vector<Measurement> TrafficNoTraffic();
   std::vector<Measurement> TrafficInTheMiddleLaneAhead();
   std::vector<Measurement> TrafficInTheLeftAndTheMiddleLaneAhead();
   std::vector<Measurement> TrafficInAllLanesAhead();
   std::vector<Measurement> TrafficInTheLeftLaneAheadGoingFast();
+  std::vector<Measurement> TrafficInRealScenario();
 };
 
 #endif //PATH_PLANNING_DATA_H

@@ -85,8 +85,8 @@ void State::GoToNextBestState(Vehicle* vehicle)
     Machine cost_machine = *(vehicle->machine_);
     Vehicle cost_vehicle(&cost_machine);
 
-    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
-    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+    cost_vehicle.UpdateEgoData(vehicle->ego_data_);
+    cost_vehicle.UpdateTrafficData(vehicle->traffic_data_);
 
     cost_machine.Cruise(&cost_vehicle);
 
@@ -107,8 +107,8 @@ void State::GoToNextBestState(Vehicle* vehicle)
     Machine cost_machine = *(vehicle->machine_);
     Vehicle cost_vehicle(&cost_machine);
 
-    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
-    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+    cost_vehicle.UpdateEgoData(vehicle->ego_data_);
+    cost_vehicle.UpdateTrafficData(vehicle->traffic_data_);
 
     cost_machine.Cruise(&cost_vehicle);
     cost_machine.ChangeLaneToLeft(cost_vehicle.GetLane());
@@ -129,8 +129,8 @@ void State::GoToNextBestState(Vehicle* vehicle)
     Machine cost_machine = *(vehicle->machine_);
     Vehicle cost_vehicle(&cost_machine);
 
-    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
-    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+    cost_vehicle.UpdateEgoData(vehicle->ego_data_);
+    cost_vehicle.UpdateTrafficData(vehicle->traffic_data_);
 
     cost_machine.Cruise(&cost_vehicle);
     cost_machine.Follow(&cost_vehicle);
@@ -151,8 +151,8 @@ void State::GoToNextBestState(Vehicle* vehicle)
     Machine cost_machine = *(vehicle->machine_);
     Vehicle cost_vehicle(&cost_machine);
 
-    cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
-    cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+    cost_vehicle.UpdateEgoData(vehicle->ego_data_);
+    cost_vehicle.UpdateTrafficData(vehicle->traffic_data_);
 
     cost_machine.Cruise(&cost_vehicle);
     cost_machine.ChangeLaneToRight(cost_vehicle.GetLane());
@@ -199,8 +199,8 @@ void State::GoToNextBestState(Vehicle* vehicle)
 double State::CalculateCost(Vehicle* vehicle, Machine *cost_machine) {
 
   Vehicle cost_vehicle(cost_machine);
-  cost_vehicle.UpdateEgoData(vehicle->current_measurement_);
-  cost_vehicle.UpdateTrafficData(vehicle->meassurements_);
+  cost_vehicle.UpdateEgoData(vehicle->ego_data_);
+  cost_vehicle.UpdateTrafficData(vehicle->traffic_data_);
 
   Cost cost;
   return cost.CalculateCost(&cost_vehicle);

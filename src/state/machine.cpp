@@ -60,8 +60,8 @@ void Machine::ChangeLaneToRight(int current_lane) {
   this->current_->ChangeLaneToRight(this, this->controller_, current_lane);
 }
 
-int Machine::GetProposedLane(int current_lane) {
-  std::cout << "proposed:" <<  this->current_->GetProposedLane(current_lane) << std::endl;
+int Machine::GetTargetLane(int current_lane) {
+//  std::cout << "proposed:" <<  this->current_->GetProposedLane(current_lane) << std::endl;
   return this->current_->GetProposedLane(current_lane);
 }
 

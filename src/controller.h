@@ -13,16 +13,18 @@ public:
   Controller(int lane);
 
   int GetTargetLane();
+
   void SetTargetLaneAndSpeed(int);
 
   double GetTargetSpeed();
+
   void SetTargetSpeed(double);
 
 private:
-
   Road *road_;
 
-  int lane_;
+  int target_lane_;
+
   double target_speed_;
 };
 
