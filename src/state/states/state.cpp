@@ -8,8 +8,8 @@
 
 #include "../../cost.h"
 #include "ready_state.h"
-#include "chainging_lane_to_right_state.h"
-#include "chainging_lane_to_left_state.h"
+#include "changing_lane_to_right_state.h"
+#include "changing_lane_to_left_state.h"
 #include "cruising_state.h"
 #include "following_state.h"
 
@@ -41,7 +41,7 @@ void State::Follow(Machine *machine, Controller *controller, Vehicle *vehicle) {
 }
 
 void State::ChangeLaneToLeft(Machine *machine, Controller *controller, int current_lane) {
-  machine->SetCurrentState(new ChaingingLaneToLeftState(controller));
+  machine->SetCurrentState(new ChangingLaneToLeftState(controller));
 
   if (this->controller_ != NULL) {
     this->controller_->SetTargetLaneAndSpeed(machine->GetCurrentState()->GetProposedLane(current_lane));
@@ -52,7 +52,7 @@ void State::ChangeLaneToLeft(Machine *machine, Controller *controller, int curre
 }
 
 void State::ChangeLaneToRight(Machine *machine, Controller *controller, int current_lane) {
-  machine->SetCurrentState(new ChaingingLaneToRightState(controller));
+  machine->SetCurrentState(new ChangingLaneToRightState(controller));
 
   if (this->controller_ != NULL) {
     this->controller_->SetTargetLaneAndSpeed(machine->GetCurrentState()->GetProposedLane(current_lane));
@@ -79,7 +79,6 @@ void State::GoToNextBestState(Vehicle* vehicle)
 
   double min_cost = 999999999;
   string best_state = "";
-
 
   try {
     Machine cost_machine = *(vehicle->machine_);
@@ -179,7 +178,7 @@ void State::GoToNextBestState(Vehicle* vehicle)
   if (best_state.compare("CLTL") == 0) {
     vehicle->machine_->ChangeLaneToLeft(vehicle->GetLane());
 
-    std::cout << "------------> CHAINGING LANE TO THE LEFT"  << endl;
+    std::cout << "------------> CHANGING LANE TO THE LEFT"  << endl;
     return;
   }
 
@@ -191,7 +190,7 @@ void State::GoToNextBestState(Vehicle* vehicle)
 
   if (best_state.compare("CLTR") == 0) {
     vehicle->machine_->ChangeLaneToRight(vehicle->GetLane());
-    std::cout << "------------> CHAINGING LANE TO THE RIGHT"  << endl;
+    std::cout << "------------> CHANGING LANE TO THE RIGHT"  << endl;
     return;
   }
 }
@@ -215,10 +214,22 @@ double State::CostForState() {
   return 0;
 }
 
-bool State::IsChaingingLanes() {
+bool State::IsChangingLanes() {
   return false;
 }
 
 double State::CostForState(double ego_speed, double traffic_speed) {
   return 0;
+}
+
+void State::LogTrafficAhead(Vehicle *vehicle) {
+  cout << "Traffic ahead in lane " << vehicle->GetTargetLane() << endl;
+}
+
+void State::LogTrafficOnTheSide(Vehicle *vehicle) {
+  cout << "Traffic on the side in lane " << vehicle->GetTargetLane() << endl;
+}
+
+void State::LogTrafficBehind(Vehicle *vehicle) {
+  cout << "Traffic behind in lane " << vehicle->GetTargetLane() << endl;
 }

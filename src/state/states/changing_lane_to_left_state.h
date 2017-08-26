@@ -7,12 +7,12 @@
 
 #include "state.h"
 
-class ChaingingLaneToLeftState : public State {
+class ChangingLaneToLeftState : public State {
 
 public:
-  ChaingingLaneToLeftState(Controller *controller);
+  ChangingLaneToLeftState(Controller *controller);
 
-  ~ChaingingLaneToLeftState();
+  ~ChangingLaneToLeftState();
 
   int GetProposedLane(int current_lane);
 

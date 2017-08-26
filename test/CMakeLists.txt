@@ -12,10 +12,10 @@ set(sources
         ../src/state/states/cruising_state.cpp
         ../src/state/states/ready_state.h
         ../src/state/states/ready_state.cpp
-        ../src/state/states/chainging_lane_to_left_state.h
-        ../src/state/states/chainging_lane_to_left_state.cpp
-        ../src/state/states/chainging_lane_to_right_state.h
-        ../src/state/states/chainging_lane_to_right_state.cpp
+        ../src/state/states/changing_lane_to_left_state.h
+        ../src/state/states/changing_lane_to_left_state.cpp
+        ../src/state/states/changing_lane_to_right_state.h
+        ../src/state/states/changing_lane_to_right_state.cpp
 
         ../src/measurement.h
         ../src/measurement.cpp

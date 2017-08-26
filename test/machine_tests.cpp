@@ -5,8 +5,8 @@
 #include "../src/state/states/state.h"
 #include "../src/state/states/ready_state.h"
 #include "../src/state/states/cruising_state.h"
-#include "../src/state/states/chainging_lane_to_left_state.h"
-#include "../src/state/states/chainging_lane_to_right_state.h"
+#include "../src/state/states/changing_lane_to_left_state.h"
+#include "../src/state/states/changing_lane_to_right_state.h"
 
 using namespace std;
 
@@ -32,7 +32,7 @@ TEST(StateMachine, Should_ChangeState_When_ChangeStateIsAllowed)
 
   machine.ChangeLaneToLeft(1);
   current_state = machine.GetCurrentState();
-  EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToLeftState));
+  EXPECT_TRUE(typeid(*current_state) == typeid(ChangingLaneToLeftState));
 
   machine.Cruise(&vehicle);
   current_state = machine.GetCurrentState();
@@ -40,7 +40,7 @@ TEST(StateMachine, Should_ChangeState_When_ChangeStateIsAllowed)
 
   machine.ChangeLaneToRight(1);
   current_state = machine.GetCurrentState();
-  EXPECT_TRUE(typeid(*current_state) == typeid(ChaingingLaneToRightState));
+  EXPECT_TRUE(typeid(*current_state) == typeid(ChangingLaneToRightState));
 }
 
 TEST(StateMachine, Should_TargetLeftLane_When_InChangingLaneToLeftState)

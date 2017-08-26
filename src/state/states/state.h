@@ -31,11 +31,15 @@ public:
   virtual double CostForState();
   virtual double CostForState(double ego_speed, double traffic_speed);
 
-  virtual bool IsChaingingLanes();
+  virtual bool IsChangingLanes();
 
   virtual double GetTargetSpeed(Vehicle* vehicle);
 
   virtual void GoToNextBestState(Vehicle* vehicle);
+
+  virtual void LogTrafficAhead(Vehicle *vehicle);
+  virtual void LogTrafficOnTheSide(Vehicle *vehicle);
+  virtual void LogTrafficBehind(Vehicle *vehicle);
 
 private:
   double CalculateCost(Vehicle* vehicle, Machine *cost_machine);

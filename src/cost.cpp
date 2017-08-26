@@ -73,13 +73,43 @@ double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_mea
   {
     auto ego_s = vehicle->ego_data_->S();
 
-    if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
+    // traffic ahead
+    if ( ((f.S()-ego_s) >= 0) &&
+         ((f.S()-ego_s) < 40) )
     {
+      vehicle->machine_->GetCurrentState()->LogTrafficAhead(vehicle);
+
       if (vehicle->GetTargetSpeed() > f.V())
       {
         collision = true;
       }
     }
+
+    // traffic behind
+    if ( ((f.S()-ego_s) < 0) &&
+         ((f.S()-ego_s) > -20) )
+    {
+      vehicle->machine_->GetCurrentState()->LogTrafficBehind(vehicle);
+
+//      if (vehicle->GetTargetSpeed() < f.V())
+//      {
+        collision = true;
+//      }
+    }
+
+
+
+
+
+
+//    if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
+//    {
+//      if (vehicle->GetTargetSpeed() > f.V())
+//      {
+//        collision = true;
+//        vehicle->machine_->GetCurrentState()->LogTrafficAhead(vehicle);
+//      }
+//    }
   }
 
    auto ego = vehicle->GetTargetSpeed();
@@ -87,7 +117,7 @@ double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_mea
 
    cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
 
-  cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
+    cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
 
   if (collision) {
     auto time_til_collision = 1;

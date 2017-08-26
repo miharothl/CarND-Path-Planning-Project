@@ -20,10 +20,10 @@ set(sources
         src/state/machine.h
         src/state/states/cruising_state.cpp
         src/state/states/cruising_state.h
-        src/state/states/chainging_lane_to_left_state.cpp
-        src/state/states/chainging_lane_to_left_state.h
-        src/state/states/chainging_lane_to_right_state.cpp
-        src/state/states/chainging_lane_to_right_state.h
+        src/state/states/changing_lane_to_left_state.cpp
+        src/state/states/changing_lane_to_left_state.h
+        src/state/states/changing_lane_to_right_state.cpp
+        src/state/states/changing_lane_to_right_state.h
         src/state/states/ready_state.cpp
         src/state/states/ready_state.h src/measurement.h src/measurement.cpp src/cost.cpp src/cost.h src/vehicle.cpp src/vehicle.h
         src/road.cpp src/road.h src/controller.cpp src/controller.h src/state/states/following_state.cpp src/state/states/following_state.h)

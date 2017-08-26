@@ -43,10 +43,16 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
   {
     auto ego_s = vehicle->ego_data_->S();
 
-    if ((f.S() > ego_s) && (f.S() - ego_s < 30))
+    if ((f.S() > ego_s) && (f.S() - ego_s < 40))
     {
       collision = true;
-      collisionVehicleSpeed = f.V();
+
+      if (f.S() - ego_s < 30)
+      {
+         collisionVehicleSpeed = f.V() - 5;
+      } else {
+        collisionVehicleSpeed = f.V();
+      }
     }
   }
 

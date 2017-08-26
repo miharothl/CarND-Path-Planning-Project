@@ -7,8 +7,8 @@
 #include <iostream>
 #include <map>
 
-#include "chainging_lane_to_left_state.h"
-#include "chainging_lane_to_right_state.h"
+#include "changing_lane_to_left_state.h"
+#include "changing_lane_to_right_state.h"
 #include "../../cost.h"
 
 using namespace std;

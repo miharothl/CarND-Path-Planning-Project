@@ -14,8 +14,8 @@
 #include "../src/state/states/following_state.h"
 #include "../src/state/states/ready_state.h"
 #include "../src/state/states/cruising_state.h"
-#include "../src/state/states/chainging_lane_to_left_state.h"
-#include "../src/state/states/chainging_lane_to_right_state.h"
+#include "../src/state/states/changing_lane_to_left_state.h"
+#include "../src/state/states/changing_lane_to_right_state.h"
 #include "../src/cost.h"
 #include "tools/data.h"
 
@@ -80,7 +80,7 @@ TEST(Vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
 
   vehicle.PlanPath();
   auto current = vehicle.machine_->GetCurrentState();
-  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
+  EXPECT_TRUE(typeid(*current) == typeid(ChangingLaneToLeftState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -97,7 +97,7 @@ TEST(Vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
 
   vehicle.PlanPath();
   auto current = vehicle.machine_->GetCurrentState();
-  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
+  EXPECT_TRUE(typeid(*current) == typeid(ChangingLaneToLeftState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -114,7 +114,7 @@ TEST(Vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
 
   vehicle.PlanPath();
   auto current = vehicle.machine_->GetCurrentState();
-  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToRightState));
+  EXPECT_TRUE(typeid(*current) == typeid(ChangingLaneToRightState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
@@ -165,7 +165,7 @@ TEST(Vehicle, Should_BeAbleToPlanPath_When_InRealDataScenario) {
 
   vehicle.PlanPath();
   auto current = vehicle.machine_->GetCurrentState();
-  EXPECT_TRUE(typeid(*current) == typeid(ChaingingLaneToLeftState));
+  EXPECT_TRUE(typeid(*current) == typeid(ChangingLaneToLeftState));
 
   auto target_lane = vehicle.GetTargetLane();
   auto target_speed = vehicle.GetTargetSpeed();
