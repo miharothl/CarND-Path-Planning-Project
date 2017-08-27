@@ -1,4 +1,5 @@
-#include <fstream> #include <math.h>
+#include <fstream>
+#include <math.h>
 #include <uWS/uWS.h>
 #include <chrono>
 #include <iostream>
@@ -160,22 +161,7 @@ vector<double> getXY(double s, double d, vector<double> maps_s, vector<double> m
 
 }
 
-//
-//bool IsOdd (double i) {
-//  return ((i%2)==1.);
-//}
-
 int main() {
-
-
-
-//
-//  void(Machine:: *ptrs[])() =
-//          {
-//                  Machine::off, Machine::on
-//          };
-
-
 
   uWS::Hub h;
 
@@ -213,18 +199,18 @@ int main() {
     map_waypoints_dy.push_back(d_y);
   }
 
-  Controller controller(1);
+  // /////////////////////////////
+  // SOLUTION BEGIN
+
+  Controller controller(1); // middle lane
   Machine machine(&controller);
-  Vehicle vehicle(&machine);
+  Vehicle vehicle(&machine, map_waypoints_x, map_waypoints_y, map_waypoints_s);
   machine.Cruise(&vehicle);
 
-  // start in lane 1
-  int lane = 1;
+  // SOLUTION END
+  // /////////////////////////////
 
-  // have a reference velocity to target
-  double ref_vel = 0.; // mph
-
-  h.onMessage([&ref_vel, &map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &vehicle, &lane, &controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
+  h.onMessage([&map_waypoints_x,&map_waypoints_y,&map_waypoints_s,&map_waypoints_dx,&map_waypoints_dy, &vehicle, &controller](uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                      uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
     // The 4 signifies a websocket message
@@ -263,210 +249,51 @@ int main() {
 
           json msgJson;
 
-          // //////////////////////////////////////////////////////////////////////////
-          // integrating into state machine
+          // /////////////////////////////
+          // SOLUTION BEGIN
 
-          vehicle.UpdateEgoData(new Measurement(-100, car_x, car_y, car_speed / 2.24 * cos(deg2rad(car_yaw)),
-                                                car_speed / 2.24 * sin(deg2rad(car_yaw)), car_s, car_d));
+          Measurement *ego = new Measurement(-100,
+                                             car_x,
+                                             car_y,
+                                             car_speed / 2.24 * cos(deg2rad(car_yaw)),
+                                             car_speed / 2.24 * sin(deg2rad(car_yaw)),
+                                             car_s,
+                                             car_d,
+                                             car_yaw);
 
           vector<Measurement> traffic;
           for (int i = 0; i<sensor_fusion.size(); i++)
           {
-            traffic.push_back(Measurement(sensor_fusion[i][0],sensor_fusion[i][1],sensor_fusion[i][2],sensor_fusion[i][3],sensor_fusion[i][4],sensor_fusion[i][5],sensor_fusion[i][6]));
+            traffic.push_back(Measurement(sensor_fusion[i][0],
+                                          sensor_fusion[i][1],
+                                          sensor_fusion[i][2],
+                                          sensor_fusion[i][3],
+                                          sensor_fusion[i][4],
+                                          sensor_fusion[i][5],
+                                          sensor_fusion[i][6]));
           }
+
+          Trajectory previous;
+          for (auto x : previous_path_x) {
+            previous.path_x.push_back(x);
+          }
+          for (auto y : previous_path_y) {
+            previous.path_y.push_back(y);
+          }
+
+          vehicle.UpdateEgoData(ego);
+
           vehicle.UpdateTrafficData(traffic);
 
-          vehicle.machine_->GoToNextBestState(&vehicle);
+          vehicle.PlanPath();
 
-          // //////////////////////////////////////////////////////////////////////////
+          auto next = vehicle.GetTrajectory(previous, end_path_s);
 
-          int prev_size = previous_path_x.size();
+          msgJson["next_x"] = next.path_x;
+          msgJson["next_y"] = next.path_y;
 
+          // SOLUTION END
           // /////////////////////////////
-          // SENSOR FUSION BEGIN
-
-          if (prev_size > 0)
-          {
-            car_s = end_path_s;
-          }
-
-          bool too_close = false;
-
-          cout << "---------------------------------\n";
-          cout << " car EGO ";
-          cout << "; x: " << car_x;
-          cout << "; y: " << car_y;
-          cout << "; vx: " << car_speed / 2.24 * cos(deg2rad(car_yaw));
-          cout << "; vy: " << car_speed / 2.24 * sin(deg2rad(car_yaw));
-          cout << "; s: " << car_s;
-          cout << "; d: " << car_d;
-          cout << "; speed: " << car_speed;
-          cout << "; yaw: " << car_yaw;
-          cout << endl;
-
-          for (int i = 0; i<sensor_fusion.size(); i++)
-          {
-            // car is in my lane
-
-//            cout << " car id: " << sensor_fusion[i][0];
-//            cout << "; x: " << sensor_fusion[i][1];
-//            cout << "; y: " << sensor_fusion[i][2];
-//            cout << "; vx: " << sensor_fusion[i][3];
-//            cout << "; vy: " << sensor_fusion[i][4];
-//            cout << "; s: " << sensor_fusion[i][5];
-//            cout << "; d: " << sensor_fusion[i][6];
-//            cout << endl;
-
-            lane = controller.GetTargetLane();
-
-            float d = sensor_fusion[i][6];
-            if (d < (2+4*lane+2) && d > 2+4*lane-2) {
-              double vx = sensor_fusion[i][3];
-              double vy = sensor_fusion[i][4];
-              double check_speed = sqrt(vx*vx+vy*vy);
-              double check_car_s = sensor_fusion[i][5];
-
-              check_car_s +=((double)prev_size*.02*check_speed); // if using previous points can project s value
-
-              if ((check_car_s > car_s) && ((check_car_s-car_s)<30)) {
-                // Do some logic here
-
-                //  ref_vel = 29.5;
-                too_close = true;
-
-//                if (lane > 0) {
-//                  lane = 0;
-//                }
-              }
-
-            }
-          }
-
-//          if (too_close) {
-//            ref_vel -= .224;
-//          }
-//          else
-          if (ref_vel < controller.GetTargetSpeed())
-          {
-//            ref_vel += .224;
-            ref_vel += .2;
-          }
-          else if (ref_vel > controller.GetTargetSpeed())
-          {
-//            ref_vel -= .224;
-            ref_vel -= .2;
-          }
-
-          // SENSOR FUSION END
-          // /////////////////////////////
-
-          // Create a list of widely spaced (x.y) waypoints, evenly spaced at 30m
-          vector<double> ptsx;
-          vector<double> ptsy;
-
-          // Reference x, y, yaw states
-          double ref_x = car_x;
-          double ref_y = car_y;
-          double ref_yaw = deg2rad(car_yaw);
-
-          // If previous size is almost empty use the car as starting reference
-          if (prev_size < 2) {
-            // Use two points that make the path tangent to the car
-            double prev_car_x = car_x - cos(car_yaw);
-            double prev_car_y = car_y - sin(car_yaw);
-
-            ptsx.push_back(prev_car_x);
-            ptsx.push_back(car_x);
-
-            ptsy.push_back(prev_car_y);
-            ptsy.push_back(car_y);
-          }
-          else
-          {
-            ref_x = previous_path_x[prev_size-1];
-            ref_y = previous_path_y[prev_size-1];
-
-            double ref_x_prev = previous_path_x[prev_size-2];
-            double ref_y_prev = previous_path_y[prev_size-2];
-            ref_yaw = atan2(ref_y-ref_y_prev, ref_x-ref_x_prev);
-
-            ptsx.push_back(ref_x_prev);
-            ptsx.push_back(ref_x);
-
-            ptsy.push_back(ref_y_prev);
-            ptsy.push_back(ref_y);
-          }
-
-          lane = controller.GetTargetLane();
-          // In Frenet add evenly 30m spaced points ahead of the starting reference
-          vector<double> next_wp0 = getXY(car_s+30, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-          vector<double> next_wp1 = getXY(car_s+60, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-          vector<double> next_wp2 = getXY(car_s+90, 2+4*lane, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-
-          ptsx.push_back(next_wp0[0]);
-          ptsx.push_back(next_wp1[0]);
-          ptsx.push_back(next_wp2[0]);
-
-          ptsy.push_back(next_wp0[1]);
-          ptsy.push_back(next_wp1[1]);
-          ptsy.push_back(next_wp2[1]);
-
-          for (int i=0; i<ptsx.size(); i++) {
-            // shift car reference angle to 0 degrees
-            double shift_x = ptsx[i] - ref_x;
-            double shift_y = ptsy[i] - ref_y;
-
-            ptsx[i] = (shift_x * cos(0-ref_yaw)-shift_y*sin(0-ref_yaw));
-            ptsy[i] = (shift_x * sin(0-ref_yaw)+shift_y*cos(0-ref_yaw));
-          }
-
-          // Create a spline
-          tk::spline s;
-
-          // set (x,y) points to the spline
-          s.set_points(ptsx, ptsy);
-
-          vector<double> next_x_vals;
-          vector<double> next_y_vals;
-
-          // Start with all the previous path ppoints from last time
-          for (int i=0; i<previous_path_x.size(); i++) {
-            next_x_vals.push_back(previous_path_x[i]);
-            next_y_vals.push_back(previous_path_y[i]);
-          }
-
-          double target_x = 30.0;
-          double target_y = s(target_x);
-          double target_dist = sqrt(target_x*target_x + target_y*target_y);
-
-          double x_add_on = 0;
-
-          // Fill up the rest of our path planner after filling it with previous points, here we will always output 50 points
-          for (int i=1; i<=50-previous_path_x.size(); i++) {
-
-            double N = (target_dist/(.02*ref_vel));
-            double x_point = x_add_on + (target_x) / N;
-            double y_point = s(x_point);
-
-            x_add_on = x_point;
-
-            double x_ref = x_point;
-            double y_ref = y_point;
-
-            //rotate back to world coordinates
-            x_point = (x_ref * cos(ref_yaw)-y_ref*sin(ref_yaw));
-            y_point = (x_ref * sin(ref_yaw)+y_ref*cos(ref_yaw));
-
-            x_point += ref_x;
-            y_point += ref_y;
-
-            next_x_vals.push_back(x_point);
-            next_y_vals.push_back(y_point);
-          }
-
-          // TODO: define a path made up of (x,y) points that the car will visit sequentially every .02 seconds
-          msgJson["next_x"] = next_x_vals;
-          msgJson["next_y"] = next_y_vals;
 
           auto msg = "42[\"control\","+ msgJson.dump()+"]";
 

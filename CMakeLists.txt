@@ -10,10 +10,6 @@ set(CMAKE_CXX_FLAGS, "${CXX_FLAGS}")
 set(sources
         src/main.cpp
         src/lib/spline.h
-        src/tmp/vehicle_tmp.h
-        src/tmp/vehicle_tmp.cpp
-        src/tmp/cost_tmp.cpp
-        src/tmp/cost_tmp.h
         src/state/states/state.cpp
         src/state/states/state.h
         src/state/machine.cpp

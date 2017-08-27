@@ -13,9 +13,11 @@ class Measurement {
   double vy_;
   double s_;
   double d_;
+  double yaw_;
 
 public:
   Measurement(int id, double x, double y, double vx, double vy, double s, double d);
+  Measurement(int id, double x, double y, double vx, double vy, double s, double d, double yaw);
 
   int Id();
   double X();
@@ -24,6 +26,7 @@ public:
   double Vy();
   double S();
   double D();
+  double Yaw();
 
   double V();
 };
