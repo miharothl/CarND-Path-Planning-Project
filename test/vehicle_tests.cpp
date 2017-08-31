@@ -69,7 +69,7 @@ TEST(Vehicle, Should_AlwaysDriveOnTheRightSideOfTheRoad) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kLeftLane);
-  EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
+  EXPECT_EQ(target_speed, road.GetPreferredSpeedForLane(data.kLeftLane));
 }
 
 TEST(Vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
@@ -86,7 +86,7 @@ TEST(Vehicle, Should_PreferToDriveInLeftLane_When_ThereIsNoTraffic) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kLeftLane);
-  EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
+  EXPECT_EQ(target_speed, road.GetPreferredSpeedForLane(data.kLeftLane));
 }
 
 TEST(Vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
@@ -103,7 +103,7 @@ TEST(Vehicle, Should_OvertakeOnTheLeft_When_ThereIsNoTrafficOnTheLeftLane) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kLeftLane);
-  EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kLeftLane));
+  EXPECT_EQ(target_speed, road.GetPreferredSpeedForLane(data.kLeftLane));
 }
 
 TEST(Vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
@@ -120,7 +120,7 @@ TEST(Vehicle, Should_OvertakeOnTheRight_When_ThereIsTrafficOnTheLeftLane) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kRightLane);
-  EXPECT_EQ(target_speed, road.GetSpeedLimitForLane(data.kRightLane));
+  EXPECT_EQ(target_speed, road.GetPreferredSpeedForLane(data.kRightLane));
 }
 
 TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
@@ -137,7 +137,7 @@ TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToTraffic) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kMiddleLane);
-  EXPECT_TRUE(target_speed < road.GetSpeedLimitForLane(data.kMiddleLane));
+  EXPECT_TRUE(target_speed < road.GetPreferredSpeedForLane(data.kMiddleLane));
 }
 
 TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
@@ -154,7 +154,7 @@ TEST(Vehicle, Should_FollowVehicle_When_NotPossibleToOverTakeDueToSpeedLimit) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kLeftLane);
-  EXPECT_TRUE(target_speed < road.GetSpeedLimitForLane(data.kLeftLane));
+  EXPECT_TRUE(target_speed < road.GetPreferredSpeedForLane(data.kLeftLane));
 }
 
 TEST(Vehicle, Should_BeAbleToPlanPath_When_InRealDataScenario) {
@@ -171,5 +171,5 @@ TEST(Vehicle, Should_BeAbleToPlanPath_When_InRealDataScenario) {
   auto target_speed = vehicle.GetTargetSpeed();
 
   EXPECT_EQ(target_lane, data.kLeftLane);
-  EXPECT_TRUE(target_speed == road.GetSpeedLimitForLane(data.kLeftLane));
+  EXPECT_TRUE(target_speed == road.GetPreferredSpeedForLane(data.kLeftLane));
 }

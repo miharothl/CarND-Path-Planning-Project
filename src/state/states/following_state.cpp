@@ -49,7 +49,7 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
 
       if (f.S() - ego_s < 30)
       {
-         collisionVehicleSpeed = f.V() - 5;
+        collisionVehicleSpeed = f.V() - 1;
       } else {
         collisionVehicleSpeed = f.V();
       }
@@ -61,15 +61,16 @@ double FollowingState::GetTargetSpeed(Vehicle *vehicle) {
   } else {
     return State::GetTargetSpeed(vehicle);
   }
-}
+ }
 
 double FollowingState::CostForState() {
   return 10050;
 }
 
-double FollowingState::CostForState(double ego_speed, double traffic_speed) {
+double FollowingState::CostForState(double ego_speed, double speed_limit) {
 
-  if (fabs(ego_speed - traffic_speed) < 2.)
+  // if very close to speed limit, follow as it will be hard to overtake
+  if (fabs(ego_speed - speed_limit) < 2.)
   {
     return -500;
   }

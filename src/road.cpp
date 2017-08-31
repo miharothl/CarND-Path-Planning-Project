@@ -9,11 +9,12 @@
 #include <iostream>
 
 int Road::GetLane(double d) {
-  return (int) round( (d-2) / 4);
+  return (int) round( (d-lane_width_/2) / lane_width_);
 }
 
-bool Road::IsLaneAllowed(int lane) {
-  if ((lane < 0) || (lane > 2)) {
+bool Road::IsLaneOnTheRoad(int lane) {
+  if ((lane < left_lane_) || (lane > right_lane_))
+  {
     return false;
   }
   else
@@ -22,17 +23,17 @@ bool Road::IsLaneAllowed(int lane) {
   }
 }
 
-double Road::GetSpeedLimitForLane(int lane) {
+double Road::GetPreferredSpeedForLane(int lane) {
 
   switch (lane)
   {
     case 0:
-      return 22.; // m/s
+      return this->speed_limit_;
     case 1:
-      return 21.; // m/s
+      return speed_limit_ * 0.95;
     case 2:
-      return 20.; // m/s
+      return speed_limit_ * 0.9;
     default:
-      return 10;
+      return 5; // m/s
   }
 }

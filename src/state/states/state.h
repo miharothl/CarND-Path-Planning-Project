@@ -29,6 +29,7 @@ public:
   virtual int GetProposedLane(int current_lane);
 
   virtual double CostForState();
+
   virtual double CostForState(double ego_speed, double traffic_speed);
 
   virtual bool IsChangingLanes();
@@ -37,9 +38,11 @@ public:
 
   virtual void GoToNextBestState(Vehicle* vehicle);
 
-  virtual void LogTrafficAhead(Vehicle *vehicle);
+  virtual void LogTrafficAhead(Vehicle *vehicle, double distance = 0.);
+
   virtual void LogTrafficOnTheSide(Vehicle *vehicle);
-  virtual void LogTrafficBehind(Vehicle *vehicle);
+
+  virtual void LogTrafficBehind(Vehicle *vehicle, double ditance = 0.);
 
 private:
   double CalculateCost(Vehicle* vehicle, Machine *cost_machine);

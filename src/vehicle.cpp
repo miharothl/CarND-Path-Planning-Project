@@ -79,8 +79,7 @@ void Vehicle::PlanPath()
   machine_->GoToNextBestState(this);
 }
 
-
-Trajectory Vehicle::GetTrajectory(Trajectory prev, double end_path_s) {
+Trajectory Vehicle::GenerateTrajectory(Trajectory prev, double end_path_s) {
 
   int prev_size = prev.path_x.size();
 
@@ -92,11 +91,11 @@ Trajectory Vehicle::GetTrajectory(Trajectory prev, double end_path_s) {
 
   if (ref_vel_ < this->GetTargetSpeed())
   {
-    ref_vel_ += .2;
+    ref_vel_ += .17;
   }
   else if (ref_vel_ > this->GetTargetSpeed())
   {
-    ref_vel_ -= .2;
+    ref_vel_ -= .17;
   }
 
   // Create a list of widely spaced (x.y) waypoints, evenly spaced at 30m

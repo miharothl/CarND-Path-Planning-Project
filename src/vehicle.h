@@ -36,7 +36,7 @@ public:
 
   void PlanPath();
 
-  Trajectory GetTrajectory(Trajectory previous, double end_path_s);
+  Trajectory GenerateTrajectory(Trajectory previous, double end_path_s);
 
 public:
   Measurement *ego_data_;

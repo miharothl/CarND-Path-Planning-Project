@@ -20,11 +20,7 @@ double Cost::CalculateCost(Vehicle *vehicle) {
   cost += CollisionCost(vehicle, vehicle->traffic_data_);
   cost += this->DrivingTowardsLeftSideCost(vehicle, vehicle->traffic_data_);
 
-//  auto cur_state = vehicle->machine_->GetCurrentState();
-//  std::cout << typeid(*cur_state).name();
-//  std::cout << " --> cost: " << cost << std::endl;
-
- return cost;
+  return cost;
 }
 
 double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
@@ -41,7 +37,7 @@ double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_me
     cost += this->kComfort;
   }
 
-  if (!road.IsLaneAllowed(proposed))
+  if (!road.IsLaneOnTheRoad(proposed))
   {
     cost += this->kCollision;
   }
@@ -51,7 +47,6 @@ double Cost::ChangeLaneCost(Vehicle *vehicle, std::vector<Measurement> trafic_me
 
 double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
 
-  int current = vehicle->GetLane();
   int proposed = vehicle->GetTargetLane();
 
   double cost = 0.;
@@ -73,11 +68,13 @@ double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_mea
   {
     auto ego_s = vehicle->ego_data_->S();
 
+    auto distance = f.S() - ego_s;
+
     // traffic ahead
-    if ( ((f.S()-ego_s) >= 0) &&
-         ((f.S()-ego_s) < 40) )
+    if ( (distance >= 0) &&
+         (distance < 40) )
     {
-      vehicle->machine_->GetCurrentState()->LogTrafficAhead(vehicle);
+      vehicle->machine_->GetCurrentState()->LogTrafficAhead(vehicle, distance);
 
       if (vehicle->GetTargetSpeed() > f.V())
       {
@@ -86,62 +83,44 @@ double Cost::CollisionCost(Vehicle *vehicle, std::vector<Measurement> trafic_mea
     }
 
     // traffic behind
-    if ( ((f.S()-ego_s) < 0) &&
-         ((f.S()-ego_s) > -20) )
+    if ( (distance < 0) &&
+         (distance > -20) )
     {
-      vehicle->machine_->GetCurrentState()->LogTrafficBehind(vehicle);
-
-//      if (vehicle->GetTargetSpeed() < f.V())
+      vehicle->machine_->GetCurrentState()->LogTrafficBehind(vehicle, distance);
+//      if (vehicle->GetTargetSpeed()  < f.V())
 //      {
         collision = true;
 //      }
     }
-
-
-
-
-
-
-//    if ( (f.S()>(ego_s-5)) && (f.S()-ego_s< 30) )
-//    {
-//      if (vehicle->GetTargetSpeed() > f.V())
-//      {
-//        collision = true;
-//        vehicle->machine_->GetCurrentState()->LogTrafficAhead(vehicle);
-//      }
-//    }
   }
 
-   auto ego = vehicle->GetTargetSpeed();
-   auto traffic = road.GetSpeedLimitForLane(vehicle->GetTargetLane());
+  auto ego = vehicle->GetTargetSpeed();
+  auto traffic = road.GetPreferredSpeedForLane(vehicle->GetTargetLane());
 
-   cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
+  // If
+  cost = cost + vehicle->machine_->GetCurrentState()->CostForState(ego, traffic);
 
-    cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
+  cost = cost + vehicle->machine_->GetCurrentState()->CostForState();
 
-  if (collision) {
+  if (collision)
+  {
     auto time_til_collision = 1;
     auto exponent = pow(float(time_til_collision), 2);
     auto mult = exp(-exponent);
 
-     cost =  mult * this->kCollision;
+    cost =  mult * this->kCollision;
   }
 
   return cost;
 }
 
 double Cost::DrivingTowardsLeftSideCost(Vehicle *vehicle, std::vector<Measurement> trafic_measurement) {
-
   double cost;
   cost = 0;
 
-  if (vehicle->GetTargetLane() - vehicle->GetLane() < 0)
-  {
+  if (vehicle->GetTargetLane() - vehicle->GetLane() < 0) {
     cost = -10025;
   }
 
   return cost;
 }
-
-
-

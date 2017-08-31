@@ -207,7 +207,7 @@ double State::CalculateCost(Vehicle* vehicle, Machine *cost_machine) {
 
 double State::GetTargetSpeed(Vehicle *vehicle) {
   Road road;
-  return road.GetSpeedLimitForLane(vehicle->GetTargetLane());
+  return road.GetPreferredSpeedForLane(vehicle->GetTargetLane());
 }
 
 double State::CostForState() {
@@ -222,14 +222,14 @@ double State::CostForState(double ego_speed, double traffic_speed) {
   return 0;
 }
 
-void State::LogTrafficAhead(Vehicle *vehicle) {
-  cout << "Traffic ahead in lane " << vehicle->GetTargetLane() << endl;
+void State::LogTrafficAhead(Vehicle *vehicle, double distance) {
+  cout << "Traffic " << distance << "m ahead in lane " << vehicle->GetTargetLane() << endl;
 }
 
 void State::LogTrafficOnTheSide(Vehicle *vehicle) {
   cout << "Traffic on the side in lane " << vehicle->GetTargetLane() << endl;
 }
 
-void State::LogTrafficBehind(Vehicle *vehicle) {
-  cout << "Traffic behind in lane " << vehicle->GetTargetLane() << endl;
+void State::LogTrafficBehind(Vehicle *vehicle, double distance) {
+  cout << "Traffic " << distance << "m behind in lane " << vehicle->GetTargetLane() << endl;
 }
