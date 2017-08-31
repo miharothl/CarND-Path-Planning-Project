@@ -111,9 +111,9 @@ Spline is fitted through five way points `vehicle.cpp (line 166)`.
  
 Images below show path planner in action:
 
-![Path Planner in action 1](./images/path_planner_in_action_1.png)
+![Path Planner in action 1](./images/path_planner_is_following.png)
 
-![Path Planner in action 2](./images/path_planner_in_action_2.png)
+![Path Planner in action 2](./images/path_planner_is_changing_lane.png)
 
 ### Files
 
